@@ -1,5 +1,9 @@
 package ru.otus.filmmonster
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Film(
     val id: Int,
     val name: Int,
@@ -7,4 +11,4 @@ data class Film(
     val description: Int,
     var like: Boolean = false,
     var comment: String = ""
-    )
+    ) : Parcelable
