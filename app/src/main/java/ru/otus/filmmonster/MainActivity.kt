@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,35 +50,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openDetails(id: Int){
-        val intentDetails = Intent(this, Details_Activity::class.java)
-        intentDetails.putExtra("film",films[id])
-        Log.d("__OTUS__","putExtra")
-        startActivity(intentDetails, Bundle())
+        val intentDetails = Intent(this, DetailsActivity::class.java)
+        intentDetails.putExtra(EXTRA_FILM,films[id])
+        //Log.d("_OTUS_","putExtra")
+        //startActivity(intentDetails, Bundle())
+        getFilm.launch(intentDetails)
     }
 
     var selected: Int = -1
-    lateinit var films: List<Film>
+    lateinit var films: MutableList<Film>
 
-    fun createFilms(): List<Film> {
+    fun createFilms(): MutableList<Film> {
         val film1 = Film(
-            1,
+            0,
             R.string.film1,
             R.drawable.norway,
             R.string.description1,
         )
         val film2 = Film(
-            2,
+            1,
             R.string.film2,
             R.drawable.the_wire,
             R.string.description2,
         )
         val film3 = Film(
-            3,
-            R.string.film1,
+            2,
+            R.string.film3,
             R.drawable.true_detective,
-            R.string.description1,
+            R.string.description3,
         )
-        val films = listOf(film1, film2, film3)
+        val films = mutableListOf<Film>(film1, film2, film3)
         return films
     }
 
@@ -95,5 +97,23 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.film_name1).setTextColor(Color.BLACK)
         findViewById<TextView>(R.id.film_name2).setTextColor(Color.BLACK)
         findViewById<TextView>(R.id.film_name3).setTextColor(Color.BLACK)
+    }
+
+    val getFilm = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        result ->
+            val data = result.data
+            if (result.resultCode == RESULT_OK && data != null){
+                val film: Film? = data.getParcelableExtra(DetailsActivity.EXTRA_FILM)
+                film?.let{
+                    val id = it.id
+                    films[id] = it
+                    Log.d("_OTUS_", it.comment)
+                    Log.d("_OTUS_","${it.like}")
+                }
+            }
+    }
+
+    companion object {
+        const val EXTRA_FILM = "film"
     }
 }

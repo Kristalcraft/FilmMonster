@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FilmMonster">
         <activity
-            android:name=".Details_Activity"
+            android:name=".DetailsActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
