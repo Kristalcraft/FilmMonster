@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FilmMonster</string>
+    <string name="like">Like</string>
+    <string name="comment">Comment</string>
+    <string name="film2">The wire</string>
+    <string name="details">Details</string>
+    <string name="invite_friend">Invite friend</string>
+    <string name="film3">True detective</string>
+    <string name="film1">Severed Ways: The Norse Discovery of America</string>
+    <string name="description1">On the coast of North America in AD 1007, two Norsemen are stranded when their expedition is attacked and they are left for dead. As they struggle to survive in the vast forests of the New World, their paths diverge as one pursues a spiritual quest and the other reverts to his primal instincts</string>
+    <string name="description2">The Baltimore drug scene, as The Baltimore drug scene, as seen through the eyes of drug dealers and law enforcement. through the eyes of drug dealers and law enforcement.</string>
+    <string name="description3">Seasonal anthology series in which police investigations unearth the personal and professional secrets of those involved, both within and outside the law.</string>
+</resources>
