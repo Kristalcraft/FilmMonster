@@ -3,14 +3,15 @@ package ru.otus.filmmonster
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import android.os.Bundle as AndroidOsBundle
 
 class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: AndroidOsBundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -23,11 +24,24 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.button_details3).setOnClickListener(detailsOnClickListener)
     }
 
-    override fun onSaveInstanceState(outState: Bundle){
+    override fun onBackPressed() {
+        onCreateDialog()
+    }
+
+    private fun onCreateDialog() {
+        return AlertDialog.Builder(this)
+            .setTitle(R.string.exit)
+            .setMessage(getString(R.string.exit_question))
+            .setNegativeButton(R.string.no) { dialog, which -> }
+            .setPositiveButton(R.string.yes) { dialog, which -> finish()}
+            .create()
+            .show()
+    }
+
+    override fun onSaveInstanceState(outState: AndroidOsBundle){
         super.onSaveInstanceState(outState)
         outState.putInt("select", selected)
     }
-
 
     var detailsOnClickListener = View.OnClickListener {
         when (it.id){

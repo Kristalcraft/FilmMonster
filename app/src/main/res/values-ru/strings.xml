@@ -11,4 +11,8 @@
     <string name="like">Нравится</string>
     <string name="comment">Добавить комментарий</string>
     <string name="details">Детали</string>
+    <string name="exit_question">Вы уверены, что хотите выйти?</string>
+    <string name="exit">Выход</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
 </resources>
