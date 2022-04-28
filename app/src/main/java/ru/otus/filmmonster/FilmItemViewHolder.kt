@@ -13,9 +13,11 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
     private val detailsButton: Button = itemView.findViewById(R.id.button_details)
     private val likeButton: CheckableImageView = itemView.findViewById(R.id.like_button)
 
-    fun bind(film: Film, detailsOnClickListener: View.OnClickListener){
+    fun bind(film: Film, onFilmDetailsClick: (position: Int) -> Unit){
         filmTitle.setText(film.name)
         filmPoster.setImageResource(film.poster)
-        detailsButton.setOnClickListener(detailsOnClickListener)
+        detailsButton.setOnClickListener ({ _ ->
+            onFilmDetailsClick(adapterPosition)
+        })
     }
 }

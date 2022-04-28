@@ -22,18 +22,15 @@ class MainActivity : AppCompatActivity() {
 
         films = createFilms()
 
-                selectFilm(savedInstanceState?.getInt("select", -1) ?:-1)
+        selectFilm(savedInstanceState?.getInt("select", -1) ?:-1)
 
-        //findViewById<View>(R.id.button_details).setOnClickListener(detailsOnClickListener)
-        //findViewById<View>(R.id.button_details2).setOnClickListener(detailsOnClickListener)
-        //findViewById<View>(R.id.button_details3).setOnClickListener(detailsOnClickListener)
         initRecycler()
     }
 
     private fun initRecycler(){
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = FilmItemAdapter(films, detailsOnClickListener)
+        recyclerView.adapter = FilmItemAdapter(films) { position -> onFilmDetailsClick(position)}
     }
 
     override fun onBackPressed() {
@@ -53,25 +50,13 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: AndroidOsBundle){
         super.onSaveInstanceState(outState)
         outState.putInt("select", selected)
+        //TODO Saving films when changing orientation
     }
 
-    var detailsOnClickListener = View.OnClickListener {
-        when (it.id){
-            R.id.button_details -> {
-                selected = 0
-                selectFilm(selected)
-                openDetails(0)
-            }
-            //R.id.button_details2 -> {
-            //    selected = 1
-            //    selectFilm(selected)
-            //    openDetails(1)
-            //}
-           // R.id.button_details3 -> {
-            //    selected = 2
-            //    selectFilm(selected)
-             //   openDetails(2)
-            }
+    private fun onFilmDetailsClick(position: Int) {
+        selected = position
+        selectFilm(position)
+        openDetails(position)
     }
 
 
@@ -242,9 +227,6 @@ class MainActivity : AppCompatActivity() {
     fun selectFilm(selected: Int){
         unSelectFilms()
         when (selected){
-            //0 -> {findViewById<TextView>(R.id.film_name).setTextColor(Color.RED)}
-            //1 -> {findViewById<TextView>(R.id.film_name2).setTextColor(Color.RED)}
-            //2 -> {findViewById<TextView>(R.id.film_name3).setTextColor(Color.RED)}
         }
     }
 

@@ -1,13 +1,12 @@
 package ru.otus.filmmonster
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class FilmItemAdapter (
     private val films: MutableList<Film>,
-    private val onDetailClickListener: View.OnClickListener
+    private val onFilmDetailsClick: (position: Int) -> Unit
     ):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder{
@@ -18,7 +17,7 @@ class FilmItemAdapter (
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder) {
             is FilmItemViewHolder -> {
-                holder.bind(films[position],onDetailClickListener )
+                holder.bind(films[position],onFilmDetailsClick)
             }
         }
     }
