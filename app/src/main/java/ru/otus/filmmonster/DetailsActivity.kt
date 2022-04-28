@@ -15,22 +15,22 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.details)
         try {
-            film = intent.getParcelableExtra<Film>("film")!!
+            val filmLocal = intent?.getParcelableExtra<Film>("film") ?: throw IllegalStateException("No film data provided")
             //Log.d("_OTUS_","intent OK")
-            findViewById<ImageView>(R.id.det_poster).setImageResource(film!!.poster)
-            findViewById<TextView>(R.id.det_film_name).setText(film!!.name)
-            findViewById<TextView>(R.id.det_description).setText(film!!.description)
-            findViewById<EditText>(R.id.det_comment).setText(film!!.comment)
-            findViewById<CheckBox>(R.id.det_like).isChecked = film!!.like
+            findViewById<ImageView>(R.id.det_poster).setImageResource(filmLocal.poster)
+            findViewById<TextView>(R.id.det_film_name).setText(filmLocal.name)
+            findViewById<TextView>(R.id.det_description).setText(filmLocal.description)
+            findViewById<EditText>(R.id.det_comment).setText(filmLocal.comment)
+            findViewById<CheckBox>(R.id.det_like).isChecked = filmLocal.like
 
             findViewById<Button>(R.id.det_invite).setOnClickListener(){
                 val intentShare = Intent(Intent.ACTION_SEND)
-                intentShare.putExtra(Intent.EXTRA_TEXT, "Советую посмотреть фильм ${getString(film!!.name)}")
+                intentShare.putExtra(Intent.EXTRA_TEXT, "Советую посмотреть фильм ${getString(filmLocal.name)}")
                 intentShare.type = "text/plain"
                 startActivity(Intent.createChooser(intentShare, "Поделиться"))
             }
-
-        } catch (e: NullPointerException){
+            film = filmLocal
+        } catch (e: IllegalStateException){
             Log.d("_OTUS_","NullPointerException")
             Toast.makeText(this, "no such film", Toast.LENGTH_SHORT).show()
         }
