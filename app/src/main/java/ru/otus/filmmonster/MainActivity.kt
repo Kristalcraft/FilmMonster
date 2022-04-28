@@ -8,20 +8,32 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.os.Bundle as AndroidOsBundle
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
+
+    private val recyclerView by lazy{findViewById<RecyclerView>(R.id.recycler)}
+
     override fun onCreate(savedInstanceState: AndroidOsBundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         films = createFilms()
 
-        selectFilm(savedInstanceState?.getInt("select", -1) ?:-1)
+                selectFilm(savedInstanceState?.getInt("select", -1) ?:-1)
 
-        findViewById<View>(R.id.button_details1).setOnClickListener(detailsOnClickListener)
-        findViewById<View>(R.id.button_details2).setOnClickListener(detailsOnClickListener)
-        findViewById<View>(R.id.button_details3).setOnClickListener(detailsOnClickListener)
+        //findViewById<View>(R.id.button_details).setOnClickListener(detailsOnClickListener)
+        //findViewById<View>(R.id.button_details2).setOnClickListener(detailsOnClickListener)
+        //findViewById<View>(R.id.button_details3).setOnClickListener(detailsOnClickListener)
+        initRecycler()
+    }
+
+    private fun initRecycler(){
+        val layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = FilmItemAdapter(films, detailsOnClickListener)
     }
 
     override fun onBackPressed() {
@@ -45,23 +57,23 @@ class MainActivity : AppCompatActivity() {
 
     var detailsOnClickListener = View.OnClickListener {
         when (it.id){
-            R.id.button_details1 -> {
+            R.id.button_details -> {
                 selected = 0
                 selectFilm(selected)
                 openDetails(0)
             }
-            R.id.button_details2 -> {
-                selected = 1
-                selectFilm(selected)
-                openDetails(1)
+            //R.id.button_details2 -> {
+            //    selected = 1
+            //    selectFilm(selected)
+            //    openDetails(1)
+            //}
+           // R.id.button_details3 -> {
+            //    selected = 2
+            //    selectFilm(selected)
+             //   openDetails(2)
             }
-            R.id.button_details3 -> {
-                selected = 2
-                selectFilm(selected)
-                openDetails(2)
-            }
-        }
     }
+
 
     fun openDetails(id: Int){
         val intentDetails = Intent(this, DetailsActivity::class.java)
@@ -75,25 +87,154 @@ class MainActivity : AppCompatActivity() {
     lateinit var films: MutableList<Film>
 
     fun createFilms(): MutableList<Film> {
-        val film1 = Film(
+         films = mutableListOf(
+          Film(
             0,
             R.string.film1,
             R.drawable.norway,
             R.string.description1,
-        )
-        val film2 = Film(
+        ),
+         Film(
             1,
             R.string.film2,
             R.drawable.the_wire,
             R.string.description2,
-        )
-        val film3 = Film(
+        ),
+        Film(
             2,
             R.string.film3,
             R.drawable.true_detective,
             R.string.description3,
+        ),
+         Film(
+             3,
+             R.string.film1,
+             R.drawable.norway,
+             R.string.description1,
+         ),
+         Film(
+             4,
+             R.string.film2,
+             R.drawable.the_wire,
+             R.string.description2,
+         ),
+         Film(
+             5,
+             R.string.film3,
+             R.drawable.true_detective,
+             R.string.description3,
+         ),
+         Film(
+             6,
+             R.string.film1,
+             R.drawable.norway,
+             R.string.description1,
+         ),
+         Film(
+             7,
+             R.string.film2,
+             R.drawable.the_wire,
+             R.string.description2,
+         ),
+         Film(
+             8,
+             R.string.film3,
+             R.drawable.true_detective,
+             R.string.description3,
+         ),
+         Film(
+             9,
+             R.string.film1,
+             R.drawable.norway,
+             R.string.description1,
+         ),
+         Film(
+             10,
+             R.string.film2,
+             R.drawable.the_wire,
+             R.string.description2,
+         ),
+         Film(
+             11,
+             R.string.film3,
+             R.drawable.true_detective,
+             R.string.description3,
+         ),
+         Film(
+             12,
+             R.string.film1,
+             R.drawable.norway,
+             R.string.description1,
+         ),
+         Film(
+             13,
+             R.string.film2,
+             R.drawable.the_wire,
+             R.string.description2,
+         ),
+         Film(
+             14,
+             R.string.film3,
+             R.drawable.true_detective,
+             R.string.description3,
+         ),
+         Film(
+             15,
+             R.string.film1,
+             R.drawable.norway,
+             R.string.description1,
+         ),
+         Film(
+             16,
+             R.string.film2,
+             R.drawable.the_wire,
+             R.string.description2,
+         ),
+         Film(
+             17,
+             R.string.film3,
+             R.drawable.true_detective,
+             R.string.description3,
+         ),
+         Film(
+             18,
+             R.string.film1,
+             R.drawable.norway,
+             R.string.description1,
+         ),
+         Film(
+             19,
+             R.string.film2,
+             R.drawable.the_wire,
+             R.string.description2,
+         ),
+         Film(
+             20,
+             R.string.film3,
+             R.drawable.true_detective,
+             R.string.description3,
+         ),
+         Film(
+             21,
+             R.string.film1,
+             R.drawable.norway,
+             R.string.description1,
+         ),
+         Film(
+             22,
+             R.string.film2,
+             R.drawable.the_wire,
+             R.string.description2,
+         ),
+         Film(
+             23,
+             R.string.film3,
+             R.drawable.true_detective,
+             R.string.description3,
+         ),
+
         )
-        val films = mutableListOf<Film>(film1, film2, film3)
+        //val films = mutableListOf<Film>(film1, film2, film3)
         return films
     }
 
@@ -101,16 +242,16 @@ class MainActivity : AppCompatActivity() {
     fun selectFilm(selected: Int){
         unSelectFilms()
         when (selected){
-            0 -> {findViewById<TextView>(R.id.film_name1).setTextColor(Color.RED)}
-            1 -> {findViewById<TextView>(R.id.film_name2).setTextColor(Color.RED)}
-            2 -> {findViewById<TextView>(R.id.film_name3).setTextColor(Color.RED)}
+            //0 -> {findViewById<TextView>(R.id.film_name).setTextColor(Color.RED)}
+            //1 -> {findViewById<TextView>(R.id.film_name2).setTextColor(Color.RED)}
+            //2 -> {findViewById<TextView>(R.id.film_name3).setTextColor(Color.RED)}
         }
     }
 
     fun unSelectFilms(){
-        findViewById<TextView>(R.id.film_name1).setTextColor(Color.BLACK)
-        findViewById<TextView>(R.id.film_name2).setTextColor(Color.BLACK)
-        findViewById<TextView>(R.id.film_name3).setTextColor(Color.BLACK)
+        //findViewById<TextView>(R.id.film_name).setTextColor(Color.BLACK)
+        //findViewById<TextView>(R.id.film_name).setTextColor(Color.BLACK)
+        //findViewById<TextView>(R.id.film_name).setTextColor(Color.BLACK)
     }
 
     val getFilm = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){

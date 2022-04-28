@@ -39,15 +39,15 @@
         android:textSize="15sp"
         app:layout_constraintTop_toBottomOf="@id/film_name"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/image_button"
+        app:layout_constraintLeft_toRightOf="@id/like_button"
         />
 
-    <CheckBox
-        android:id="@+id/image_button"
+    <ru.otus.filmmonster.lib.CheckableImageView
+        android:id="@+id/like_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="10dp"
-        android:button="@drawable/like_button"
+        android:foreground="@drawable/like_button"
         app:layout_constraintTop_toBottomOf="@id/film_name"
         app:layout_constraintLeft_toRightOf="@id/film_poster"
         />
