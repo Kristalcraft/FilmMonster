@@ -2,6 +2,7 @@ package ru.otus.filmmonster
 
 import android.content.Intent
 import android.graphics.Color
+import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -20,11 +21,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        films = createFilms()
-
-        selectFilm(savedInstanceState?.getInt("select", -1) ?:-1)
-
-        initRecycler()
+        if (savedInstanceState == null) {
+            films = createFilms()
+            selected = -1
+        } else {
+            selectFilm(savedInstanceState.getInt("select"))
+            films = savedInstanceState.getParcelableArrayList(EXTRA_FILMS)!!
+        }
+                initRecycler()
     }
 
     private fun initRecycler(){
@@ -50,6 +54,7 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: AndroidOsBundle){
         super.onSaveInstanceState(outState)
         outState.putInt("select", selected)
+        outState.putParcelableArrayList(EXTRA_FILMS, ArrayList<Parcelable>(films))
         //TODO Saving films when changing orientation
     }
 
@@ -252,5 +257,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_FILM = "film"
+        const val EXTRA_FILMS = "films"
     }
 }
+
