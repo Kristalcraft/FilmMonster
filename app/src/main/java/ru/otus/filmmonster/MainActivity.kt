@@ -24,8 +24,10 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             films = createFilms()
             selected = -1
+            prevSelected = -1
         } else {
-            //selectFilm(savedInstanceState.getInt("select"))
+            selected = savedInstanceState.getInt("select")
+            prevSelected = savedInstanceState.getInt("prevSelect")
             films = savedInstanceState.getParcelableArrayList(EXTRA_FILMS)!!
         }
         initRecycler()
@@ -54,6 +56,7 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: AndroidOsBundle){
         super.onSaveInstanceState(outState)
         outState.putInt("select", selected)
+        outState.putInt("prevSelect", prevSelected)
         outState.putParcelableArrayList(EXTRA_FILMS, ArrayList<Parcelable>(films))
     }
 
