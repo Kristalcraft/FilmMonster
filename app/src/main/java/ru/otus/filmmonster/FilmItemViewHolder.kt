@@ -1,5 +1,7 @@
 package ru.otus.filmmonster
 
+import android.graphics.Color
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -16,8 +18,19 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
     fun bind(film: Film, onFilmDetailsClick: (position: Int) -> Unit){
         filmTitle.setText(film.name)
         filmPoster.setImageResource(film.poster)
-        detailsButton.setOnClickListener ({ _ ->
+        checkHighlight(film)
+        Log.d("_OTUS_","adapterPosition $adapterPosition")
+        Log.d("_OTUS_","adapterPosition ${filmTitle.id}")
+        detailsButton.setOnClickListener { _ ->
             onFilmDetailsClick(adapterPosition)
-        })
+        }
+    }
+
+    fun checkHighlight(film: Film){
+        if (!film.isHighlighted) {
+            filmTitle.setTextColor(Color.BLACK)
+        }else{
+            filmTitle.setTextColor(Color.RED)
+        }
     }
 }

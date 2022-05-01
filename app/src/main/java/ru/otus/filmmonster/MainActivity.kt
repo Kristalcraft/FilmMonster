@@ -25,10 +25,10 @@ class MainActivity : AppCompatActivity() {
             films = createFilms()
             selected = -1
         } else {
-            selectFilm(savedInstanceState.getInt("select"))
+            //selectFilm(savedInstanceState.getInt("select"))
             films = savedInstanceState.getParcelableArrayList(EXTRA_FILMS)!!
         }
-                initRecycler()
+        initRecycler()
     }
 
     private fun initRecycler(){
@@ -55,12 +55,13 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putInt("select", selected)
         outState.putParcelableArrayList(EXTRA_FILMS, ArrayList<Parcelable>(films))
-        //TODO Saving films when changing orientation
     }
 
     private fun onFilmDetailsClick(position: Int) {
+        prevSelected = selected
         selected = position
         selectFilm(position)
+        Log.d("_OTUS_","onFilmDetailsClick $position")
         openDetails(position)
     }
 
@@ -74,6 +75,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     var selected: Int = -1
+    var prevSelected: Int = -1
     lateinit var films: MutableList<Film>
 
     fun createFilms(): MutableList<Film> {
@@ -231,14 +233,15 @@ class MainActivity : AppCompatActivity() {
 
     fun selectFilm(selected: Int){
         unSelectFilms()
-        when (selected){
-        }
+        films[selected].isHighlighted = true
+        recyclerView.adapter?.notifyItemChanged(selected)
+        recyclerView.adapter?.notifyItemChanged(prevSelected)
     }
 
     fun unSelectFilms(){
-        //findViewById<TextView>(R.id.film_name).setTextColor(Color.BLACK)
-        //findViewById<TextView>(R.id.film_name).setTextColor(Color.BLACK)
-        //findViewById<TextView>(R.id.film_name).setTextColor(Color.BLACK)
+        for (film in films) {
+            film.isHighlighted = false
+        }
     }
 
     val getFilm = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
@@ -251,6 +254,7 @@ class MainActivity : AppCompatActivity() {
                     films[id] = it
                     Log.d("_OTUS_", it.comment)
                     Log.d("_OTUS_","${it.like}")
+                    Log.d("_OTUS_", "film $id")
                 }
             }
     }

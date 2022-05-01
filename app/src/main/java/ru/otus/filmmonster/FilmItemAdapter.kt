@@ -24,6 +24,8 @@ class FilmItemAdapter (
 
     override fun getItemCount(): Int = films.size
 
+
+
 //    override fun getItemViewType(position: Int): int{
 //        return ITEM_VIEW_TYPE
 //    }
