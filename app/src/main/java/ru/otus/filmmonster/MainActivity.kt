@@ -15,18 +15,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
 
-    private val recyclerView by lazy{findViewById<RecyclerView>(R.id.recycler)}
+    open val recyclerView by lazy{findViewById<RecyclerView>(R.id.recycler)}
 
     override fun onCreate(savedInstanceState: AndroidOsBundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         findViewById<FloatingActionButton>(R.id.preferencesButton).setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            openPreferences()
         }
+
+        checkSavedState(savedInstanceState)
+        initRecycler(films)
+    }
+
+    fun checkSavedState(savedInstanceState: android.os.Bundle?){
         if (savedInstanceState == null) {
             films = createFilms()
             selected = -1
@@ -36,10 +41,17 @@ class MainActivity : AppCompatActivity() {
             prevSelected = savedInstanceState.getInt("prevSelect")
             films = savedInstanceState.getParcelableArrayList(EXTRA_FILMS)!!
         }
-        initRecycler()
     }
 
-    private fun initRecycler(){
+    private fun openPreferences() {
+        val intentPreferences = Intent(this, PreferencesActivity::class.java)
+        intentPreferences.putParcelableArrayListExtra(EXTRA_FILMS,ArrayList<Parcelable>(films))
+        //Log.d("_OTUS_","putExtra")
+        startActivity(intentPreferences, AndroidOsBundle())
+        //getFilm.launch(intentDetails)
+    }
+
+    open fun initRecycler(films:MutableList<Film>){
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = FilmItemAdapter(films) { position -> onFilmDetailsClick(position)}
@@ -66,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         outState.putParcelableArrayList(EXTRA_FILMS, ArrayList<Parcelable>(films))
     }
 
-    private fun onFilmDetailsClick(position: Int) {
+    fun onFilmDetailsClick(position: Int) {
         prevSelected = selected
         selected = position
         selectFilm(position)
@@ -87,7 +99,7 @@ class MainActivity : AppCompatActivity() {
     var prevSelected: Int = -1
     lateinit var films: MutableList<Film>
 
-    fun createFilms(): MutableList<Film> {
+    private fun createFilms(): MutableList<Film> {
          films = mutableListOf(
           Film(
             0,
