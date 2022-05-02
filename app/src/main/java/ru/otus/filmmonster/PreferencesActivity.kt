@@ -28,7 +28,11 @@ class PreferencesActivity : MainActivity() {
     fun initPrefRecycler(films:MutableList<Film>){
         val layoutManager = LinearLayoutManager(this)
         recyclerPrefView.layoutManager = layoutManager
-        recyclerPrefView.adapter = FilmItemAdapter(films) { position -> onFilmDetailsClick(position)}
+        recyclerPrefView.adapter = FilmItemAdapter(
+            films,
+            { position -> onFilmDetailsClick(position)},
+            { position -> onLikeClick(position)}
+        )
     }
 
     override fun onBackPressed() {

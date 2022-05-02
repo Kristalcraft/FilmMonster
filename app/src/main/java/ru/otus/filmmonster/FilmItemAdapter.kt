@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class FilmItemAdapter (
     private val films: MutableList<Film>,
-    private val onFilmDetailsClick: (position: Int) -> Unit
+    private val onFilmDetailsClick: (position: Int) -> Unit,
+    private val onLikeClick: (position: Int) -> Unit
     ):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder{
@@ -17,7 +18,7 @@ class FilmItemAdapter (
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder) {
             is FilmItemViewHolder -> {
-                holder.bind(films[position],onFilmDetailsClick)
+                holder.bind(films[position],onFilmDetailsClick, onLikeClick)
             }
         }
     }

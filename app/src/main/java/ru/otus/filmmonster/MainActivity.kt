@@ -54,7 +54,11 @@ open class MainActivity : AppCompatActivity() {
     open fun initRecycler(films:MutableList<Film>){
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = FilmItemAdapter(films) { position -> onFilmDetailsClick(position)}
+        recyclerView.adapter = FilmItemAdapter(
+            films,
+            {position -> onFilmDetailsClick(position)},
+            {position -> onLikeClick(position)}
+        )
     }
 
     override fun onBackPressed() {
@@ -86,6 +90,10 @@ open class MainActivity : AppCompatActivity() {
         openDetails(position)
     }
 
+    fun onLikeClick(position: Int){
+        films[position].like = !films[position].like
+        //recyclerView.adapter?.notifyItemChanged(position)
+    }
 
     fun openDetails(id: Int){
         val intentDetails = Intent(this, DetailsActivity::class.java)

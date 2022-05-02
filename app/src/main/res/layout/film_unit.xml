@@ -44,6 +44,8 @@
 
     <ru.otus.filmmonster.lib.CheckableImageView
         android:id="@+id/like_button"
+        android:focusable="true"
+        android:clickable="true"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="10dp"
