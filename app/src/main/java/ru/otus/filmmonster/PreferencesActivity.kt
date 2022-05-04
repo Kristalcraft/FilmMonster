@@ -24,8 +24,9 @@ class PreferencesActivity : MainActivity() {
                 favoriteFilms.add(film)
             }
         }
-
         initPrefRecycler(favoriteFilms)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = getText(R.string.favorites)
     }
 
     override fun onSaveInstanceState(outState: Bundle){

@@ -14,6 +14,8 @@ class DetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.details)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = getText(R.string.details)
         try {
             val filmLocal = intent?.getParcelableExtra<Film>("film") ?: throw IllegalStateException("No film data provided")
             //Log.d("_OTUS_","intent OK")
@@ -36,6 +38,10 @@ class DetailsActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
     override fun onBackPressed() {
         film?.comment = findViewById<EditText>(R.id.det_comment).text.toString()
         film?.like = findViewById<CheckBox>(R.id.det_like).isChecked

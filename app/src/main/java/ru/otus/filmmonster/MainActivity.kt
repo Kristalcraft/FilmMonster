@@ -25,6 +25,13 @@ open class MainActivity : AppCompatActivity() {
 
         checkSavedState(savedInstanceState)
         initRecycler(films)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     fun checkSavedState(savedInstanceState: android.os.Bundle?){
@@ -53,8 +60,6 @@ open class MainActivity : AppCompatActivity() {
     }
 
     open fun initRecycler(films:MutableList<Film>){
-        val layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
         recyclerView.adapter = FilmItemAdapter(
             films,
             {id -> onFilmDetailsClick(id)},
