@@ -1,19 +1,15 @@
 package ru.otus.filmmonster
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
-import android.view.View
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.os.Bundle as AndroidOsBundle
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 
 open class MainActivity : AppCompatActivity() {
 
@@ -43,12 +39,17 @@ open class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        recyclerView.adapter?.notifyDataSetChanged()
+        super.onResume()
+    }
+
     private fun openPreferences() {
         val intentPreferences = Intent(this, PreferencesActivity::class.java)
         intentPreferences.putParcelableArrayListExtra(EXTRA_FILMS,ArrayList<Parcelable>(films))
         //Log.d("_OTUS_","putExtra")
-        startActivity(intentPreferences, AndroidOsBundle())
-        //getFilm.launch(intentDetails)
+        //startActivity(intentPreferences, AndroidOsBundle())
+        getFilmsPref.launch(intentPreferences)
     }
 
     open fun initRecycler(films:MutableList<Film>){
@@ -56,12 +57,15 @@ open class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = FilmItemAdapter(
             films,
-            {position -> onFilmDetailsClick(position)},
-            {position -> onLikeClick(position)}
+            {id -> onFilmDetailsClick(id)},
+            {id -> onLikeClick(id)}
         )
     }
 
     override fun onBackPressed() {
+        for (film in films) {
+            Log.d("_OTUS_", "main activity FILM ${film.id}, ${film.like}")
+        }
         onCreateDialog()
     }
 
@@ -82,25 +86,29 @@ open class MainActivity : AppCompatActivity() {
         outState.putParcelableArrayList(EXTRA_FILMS, ArrayList<Parcelable>(films))
     }
 
-    fun onFilmDetailsClick(position: Int) {
+    fun onFilmDetailsClick(id: Int) {
         prevSelected = selected
-        selected = position
-        selectFilm(position)
-        Log.d("_OTUS_","onFilmDetailsClick $position")
-        openDetails(position)
+        selected = id
+        selectFilm(id)
+        Log.d("_OTUS_","onFilmDetailsClick $id")
+        openDetails(id)
     }
 
-    fun onLikeClick(position: Int){
-        films[position].like = !films[position].like
+    open fun onLikeClick(id: Int){
+        getFilmByID(id).like = !getFilmByID(id).like
         //recyclerView.adapter?.notifyItemChanged(position)
     }
 
     fun openDetails(id: Int){
         val intentDetails = Intent(this, DetailsActivity::class.java)
-        intentDetails.putExtra(EXTRA_FILM,films[id])
+        intentDetails.putExtra(EXTRA_FILM,getFilmByID(id))
         //Log.d("_OTUS_","putExtra")
         //startActivity(intentDetails, Bundle())
         getFilm.launch(intentDetails)
+    }
+
+    open fun getFilmByID(id: Int): Film {
+        return films.find { it.id == id }?: throw IllegalStateException("No film data provided")
     }
 
     var selected: Int = -1
@@ -262,7 +270,7 @@ open class MainActivity : AppCompatActivity() {
 
     fun selectFilm(selected: Int){
         unSelectFilms()
-        films[selected].isHighlighted = true
+        getFilmByID(selected).isHighlighted = true
         recyclerView.adapter?.notifyItemChanged(selected)
         recyclerView.adapter?.notifyItemChanged(prevSelected)
     }
@@ -273,7 +281,7 @@ open class MainActivity : AppCompatActivity() {
         }
     }
 
-    val getFilm = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+    open val getFilm = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         result ->
             val data = result.data
             if (result.resultCode == RESULT_OK && data != null){
@@ -286,6 +294,21 @@ open class MainActivity : AppCompatActivity() {
                     Log.d("_OTUS_", "film $id")
                 }
             }
+    }
+
+    val getFilmsPref = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            result ->
+        val data = result.data
+        if (result.resultCode == RESULT_OK && data != null){
+            val filmsPref: MutableList<Film>? = data.getParcelableArrayListExtra(PreferencesActivity.EXTRA_FILMS)
+            if (filmsPref != null) {
+                films = filmsPref
+                initRecycler(films) //Иначе не обновляет лайки в ресайклере
+                for (film in films) {
+                    Log.d("_OTUS_", "main activity FILM ${film.id}, ${film.like}")
+                }
+            }
+        }
     }
 
     companion object {

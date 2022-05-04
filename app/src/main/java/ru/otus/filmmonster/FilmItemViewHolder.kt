@@ -23,11 +23,11 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
         Log.d("_OTUS_","adapterPosition $adapterPosition")
         Log.d("_OTUS_","adapterPosition ${filmTitle.id}")
         detailsButton.setOnClickListener { _ ->
-            onFilmDetailsClick(adapterPosition)
+            onFilmDetailsClick(film.id)
         }
 
         likeButton.setOnClickListener {
-                _ -> onLikeClick(adapterPosition);
+                _ -> onLikeClick(film.id);
             likeButton.toggle()
         }
     }
