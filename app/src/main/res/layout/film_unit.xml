@@ -35,7 +35,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
-        android:text="Детали"
+        android:text="@string/details"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@id/film_poster"
         app:layout_constraintRight_toRightOf="parent"

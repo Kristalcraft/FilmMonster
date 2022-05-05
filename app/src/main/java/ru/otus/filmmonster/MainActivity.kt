@@ -6,7 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import android.os.Bundle as AndroidOsBundle
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -27,6 +28,16 @@ open class MainActivity : AppCompatActivity() {
         initRecycler(films)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val horizontalItemDecoration = DividerItemDecoration(this, RecyclerView.VERTICAL)
+        ContextCompat.getDrawable(this, R.drawable.divider_drawable)
+            ?.let { horizontalItemDecoration.setDrawable(it) }
+        recyclerView.addItemDecoration(horizontalItemDecoration)
+
+        val verticalItemDecoration = DividerItemDecoration(this, RecyclerView.HORIZONTAL)
+        ContextCompat.getDrawable(this, R.drawable.divider_drawable)
+            ?.let { verticalItemDecoration.setDrawable(it) }
+        recyclerView.addItemDecoration(verticalItemDecoration)
     }
 
     override fun onSupportNavigateUp(): Boolean {

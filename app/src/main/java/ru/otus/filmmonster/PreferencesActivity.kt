@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -25,8 +27,19 @@ class PreferencesActivity : MainActivity() {
             }
         }
         initPrefRecycler(favoriteFilms)
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getText(R.string.favorites)
+
+        val horizontalItemDecoration = DividerItemDecoration(this, RecyclerView.VERTICAL)
+        ContextCompat.getDrawable(this, R.drawable.divider_drawable)
+            ?.let { horizontalItemDecoration.setDrawable(it) }
+        recyclerPrefView.addItemDecoration(horizontalItemDecoration)
+
+        val verticalItemDecoration = DividerItemDecoration(this, RecyclerView.HORIZONTAL)
+        ContextCompat.getDrawable(this, R.drawable.divider_drawable)
+            ?.let { verticalItemDecoration.setDrawable(it) }
+        recyclerPrefView.addItemDecoration(verticalItemDecoration)
     }
 
     override fun onSaveInstanceState(outState: Bundle){
@@ -73,8 +86,6 @@ class PreferencesActivity : MainActivity() {
 
 
     fun initPrefRecycler(films:MutableList<Film>){
-        val layoutManager = LinearLayoutManager(this)
-        recyclerPrefView.layoutManager = layoutManager
         recyclerPrefView.adapter = FilmItemAdapter(
             films,
             { id -> onFilmDetailsClick(id)},
