@@ -1,6 +1,7 @@
 package ru.otus.filmmonster
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
@@ -52,11 +53,13 @@ class FilmsFragment : Fragment() {
             ?.let { horizontalItemDecoration.setDrawable(it) }
         recyclerView?.addItemDecoration(horizontalItemDecoration)
 
-        val verticalItemDecoration = DividerItemDecoration(requireContext(), RecyclerView.HORIZONTAL)
-        ContextCompat.getDrawable(requireContext(), R.drawable.divider_drawable)
-            ?.let { verticalItemDecoration.setDrawable(it) }
-
-        recyclerView?.addItemDecoration(verticalItemDecoration)
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            val verticalItemDecoration =
+                DividerItemDecoration(requireContext(), RecyclerView.HORIZONTAL)
+            ContextCompat.getDrawable(requireContext(), R.drawable.divider_drawable)
+                ?.let { verticalItemDecoration.setDrawable(it) }
+            recyclerView?.addItemDecoration(verticalItemDecoration)
+        }
         recyclerView?.adapter = FilmItemAdapter(
             films,
             {id -> onFilmDetailsClick(id)},
