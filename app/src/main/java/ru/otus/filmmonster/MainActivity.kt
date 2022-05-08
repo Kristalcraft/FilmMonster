@@ -25,19 +25,12 @@ open class MainActivity : AppCompatActivity() {
         }
 
         checkSavedState(savedInstanceState)
-        initRecycler(films)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val horizontalItemDecoration = DividerItemDecoration(this, RecyclerView.VERTICAL)
-        ContextCompat.getDrawable(this, R.drawable.divider_drawable)
-            ?.let { horizontalItemDecoration.setDrawable(it) }
-        recyclerView.addItemDecoration(horizontalItemDecoration)
-
-        val verticalItemDecoration = DividerItemDecoration(this, RecyclerView.HORIZONTAL)
-        ContextCompat.getDrawable(this, R.drawable.divider_drawable)
-            ?.let { verticalItemDecoration.setDrawable(it) }
-        recyclerView.addItemDecoration(verticalItemDecoration)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, FilmsFragment.newInstance(films))
+            .commit()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -71,6 +64,16 @@ open class MainActivity : AppCompatActivity() {
     }
 
     open fun initRecycler(films:MutableList<Film>){
+        val horizontalItemDecoration = DividerItemDecoration(this, RecyclerView.VERTICAL)
+        ContextCompat.getDrawable(this, R.drawable.divider_drawable)
+            ?.let { horizontalItemDecoration.setDrawable(it) }
+        recyclerView.addItemDecoration(horizontalItemDecoration)
+
+        val verticalItemDecoration = DividerItemDecoration(this, RecyclerView.HORIZONTAL)
+        ContextCompat.getDrawable(this, R.drawable.divider_drawable)
+            ?.let { verticalItemDecoration.setDrawable(it) }
+
+        recyclerView.addItemDecoration(verticalItemDecoration)
         recyclerView.adapter = FilmItemAdapter(
             films,
             {id -> onFilmDetailsClick(id)},
