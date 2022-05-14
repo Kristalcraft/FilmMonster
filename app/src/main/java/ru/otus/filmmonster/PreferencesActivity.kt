@@ -86,11 +86,11 @@ class PreferencesActivity : MainActivity() {
 
 
     fun initPrefRecycler(films:MutableList<Film>){
-        recyclerPrefView.adapter = FilmItemAdapter(
+        /*recyclerPrefView.adapter = FilmItemAdapter(
             films,
             { id -> onFilmDetailsClick(id)},
             { id -> onLikeClick(id)}
-        )
+        )*/
     }
 
     override fun onBackPressed() {

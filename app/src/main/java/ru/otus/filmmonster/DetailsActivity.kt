@@ -7,6 +7,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 
 
+
 class DetailsActivity : AppCompatActivity() {
 
     var film: Film? = null

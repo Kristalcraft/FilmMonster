@@ -5,13 +5,13 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 
@@ -21,10 +21,10 @@ import androidx.recyclerview.widget.RecyclerView
  * Use the [FilmsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class FilmsFragment : Fragment() {
+open class FilmsFragment : Fragment() {
 
-    open val recyclerView by lazy{view?.findViewById<RecyclerView>(R.id.recycler)}
-    lateinit var films: MutableList<Film>
+    lateinit var recyclerView: RecyclerView
+    open lateinit var films: MutableList<Film>
     var selected: Int = -1
     var prevSelected: Int = -1
 
@@ -33,6 +33,11 @@ class FilmsFragment : Fragment() {
         arguments?.let {
             films = it.getParcelableArrayList<Film>(EXTRA_FILMS)?: arrayListOf()
         }
+    }
+
+    override fun onResume() {
+        recyclerView.adapter?.notifyDataSetChanged()
+        super.onResume()
     }
 
     override fun onCreateView(
@@ -48,6 +53,7 @@ class FilmsFragment : Fragment() {
     }
 
     open fun initRecycler(films:MutableList<Film>){
+        recyclerView = view?.findViewById<RecyclerView>(R.id.recycler) as RecyclerView
         val horizontalItemDecoration = DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
         ContextCompat.getDrawable(requireContext(), R.drawable.divider_drawable)
             ?.let { horizontalItemDecoration.setDrawable(it) }

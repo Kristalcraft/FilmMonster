@@ -6,31 +6,45 @@ import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
 import android.os.Bundle as AndroidOsBundle
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationBarView
 
 open class MainActivity : AppCompatActivity() {
-
-    open val recyclerView by lazy{findViewById<RecyclerView>(R.id.recycler)}
 
     override fun onCreate(savedInstanceState: AndroidOsBundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViewById<FloatingActionButton>(R.id.preferencesButton).setOnClickListener { view ->
-            openPreferences()
-        }
-
         checkSavedState(savedInstanceState)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, FilmsFragment.newInstance(films))
-            .commit()
+        openFilms(savedInstanceState)
+
+        val navigation = findViewById<NavigationBarView>(R.id.bottomNavigation)
+
+        navigation.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.films -> openFilms(savedInstanceState)
+                R.id.favorites -> openPreferences()
+            }
+            true
+        }
+    }
+
+    fun openFilms(savedInstanceState: android.os.Bundle?){
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, FilmsFragment.newInstance(films))
+                .commit()
+        }
+        else {
+            supportFragmentManager.findFragmentById(R.id.fragment_container)?.let {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, it)
+                    .commit()
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -51,40 +65,20 @@ open class MainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        recyclerView.adapter?.notifyDataSetChanged()
         super.onResume()
     }
 
     private fun openPreferences() {
-        val intentPreferences = Intent(this, PreferencesActivity::class.java)
-        intentPreferences.putParcelableArrayListExtra(EXTRA_FILMS,ArrayList<Parcelable>(films))
-        //Log.d("_OTUS_","putExtra")
-        //startActivity(intentPreferences, AndroidOsBundle())
-        getFilmsPref.launch(intentPreferences)
-    }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, FavoritesFragment.newInstance(films))
+            .addToBackStack(null)
+            .commit()
 
-    open fun initRecycler(films:MutableList<Film>){
-        val horizontalItemDecoration = DividerItemDecoration(this, RecyclerView.VERTICAL)
-        ContextCompat.getDrawable(this, R.drawable.divider_drawable)
-            ?.let { horizontalItemDecoration.setDrawable(it) }
-        recyclerView.addItemDecoration(horizontalItemDecoration)
 
-        val verticalItemDecoration = DividerItemDecoration(this, RecyclerView.HORIZONTAL)
-        ContextCompat.getDrawable(this, R.drawable.divider_drawable)
-            ?.let { verticalItemDecoration.setDrawable(it) }
-
-        recyclerView.addItemDecoration(verticalItemDecoration)
-        recyclerView.adapter = FilmItemAdapter(
-            films,
-            {id -> onFilmDetailsClick(id)},
-            {id -> onLikeClick(id)}
-        )
     }
 
     override fun onBackPressed() {
-        for (film in films) {
-            Log.d("_OTUS_", "main activity FILM ${film.id}, ${film.like}")
-        }
+        /*if (supportFragmentManager.backStackEntryCount == 0) onCreateDialog() else supportFragmentManager.popBackStack()*/
         onCreateDialog()
     }
 
@@ -103,14 +97,6 @@ open class MainActivity : AppCompatActivity() {
         outState.putInt("select", selected)
         outState.putInt("prevSelect", prevSelected)
         outState.putParcelableArrayList(EXTRA_FILMS, ArrayList<Parcelable>(films))
-    }
-
-    fun onFilmDetailsClick(id: Int) {
-        prevSelected = selected
-        selected = id
-        selectFilm(id)
-        Log.d("_OTUS_","onFilmDetailsClick $id")
-        openDetails(id)
     }
 
     open fun onLikeClick(id: Int){
@@ -287,12 +273,12 @@ open class MainActivity : AppCompatActivity() {
     }
 
 
-    fun selectFilm(selected: Int){
+    /*fun selectFilm(selected: Int){
         unSelectFilms()
         getFilmByID(selected).isHighlighted = true
         recyclerView.adapter?.notifyItemChanged(selected)
         recyclerView.adapter?.notifyItemChanged(prevSelected)
-    }
+    }*/
 
     fun unSelectFilms(){
         for (film in films) {
@@ -315,7 +301,7 @@ open class MainActivity : AppCompatActivity() {
             }
     }
 
-    val getFilmsPref = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+/*    val getFilmsPref = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result ->
         val data = result.data
         if (result.resultCode == RESULT_OK && data != null){
@@ -328,7 +314,7 @@ open class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
+    }*/
 
     companion object {
         const val EXTRA_FILM = "film"
