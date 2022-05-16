@@ -71,15 +71,22 @@ open class MainActivity : AppCompatActivity() {
     private fun openPreferences() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, FavoritesFragment.newInstance(films))
-            .addToBackStack(null)
             .commit()
+    }
 
-
+    fun onFilmDetailsClick(film: Film) {
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, DetailsFragment.newInstance(film))
+            .addToBackStack("details")
+            .commit()
     }
 
     override fun onBackPressed() {
-        /*if (supportFragmentManager.backStackEntryCount == 0) onCreateDialog() else supportFragmentManager.popBackStack()*/
-        onCreateDialog()
+        if (supportFragmentManager.backStackEntryCount > 0){
+            supportFragmentManager.popBackStack( "details", 1)
+        } else {
+            onCreateDialog()
+        }
     }
 
     private fun onCreateDialog() {
@@ -115,10 +122,11 @@ open class MainActivity : AppCompatActivity() {
     open fun getFilmByID(id: Int): Film {
         return films.find { it.id == id }?: throw IllegalStateException("No film data provided")
     }
-
     var selected: Int = -1
     var prevSelected: Int = -1
+
     lateinit var films: MutableList<Film>
+
 
     private fun createFilms(): MutableList<Film> {
          films = mutableListOf(
@@ -272,19 +280,18 @@ open class MainActivity : AppCompatActivity() {
         return films
     }
 
-
     /*fun selectFilm(selected: Int){
         unSelectFilms()
         getFilmByID(selected).isHighlighted = true
         recyclerView.adapter?.notifyItemChanged(selected)
         recyclerView.adapter?.notifyItemChanged(prevSelected)
     }*/
-
     fun unSelectFilms(){
         for (film in films) {
             film.isHighlighted = false
         }
     }
+
 
     open val getFilm = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         result ->

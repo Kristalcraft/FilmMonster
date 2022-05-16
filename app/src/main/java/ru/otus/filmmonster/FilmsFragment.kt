@@ -57,16 +57,16 @@ open class FilmsFragment : Fragment() {
         val horizontalItemDecoration = DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
         ContextCompat.getDrawable(requireContext(), R.drawable.divider_drawable)
             ?.let { horizontalItemDecoration.setDrawable(it) }
-        recyclerView?.addItemDecoration(horizontalItemDecoration)
+        recyclerView.addItemDecoration(horizontalItemDecoration)
 
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             val verticalItemDecoration =
                 DividerItemDecoration(requireContext(), RecyclerView.HORIZONTAL)
             ContextCompat.getDrawable(requireContext(), R.drawable.divider_drawable)
                 ?.let { verticalItemDecoration.setDrawable(it) }
-            recyclerView?.addItemDecoration(verticalItemDecoration)
+            recyclerView.addItemDecoration(verticalItemDecoration)
         }
-        recyclerView?.adapter = FilmItemAdapter(
+        recyclerView.adapter = FilmItemAdapter(
             films,
             {id -> onFilmDetailsClick(id)},
             {id -> onLikeClick(id)}
@@ -77,8 +77,10 @@ open class FilmsFragment : Fragment() {
         prevSelected = selected
         selected = id
         selectFilm(id)
-        Log.d("_OTUS_","onFilmDetailsClick $id")
-        openDetails(id)
+        /*Log.d("_OTUS_","onFilmDetailsClick $id")
+        openDetails(id)*/
+
+        (activity as MainActivity).onFilmDetailsClick(getFilmByID(id))
     }
 
     open fun onLikeClick(id: Int){
