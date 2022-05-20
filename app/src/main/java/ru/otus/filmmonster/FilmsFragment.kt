@@ -35,9 +35,9 @@ open class FilmsFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
         recyclerView.adapter?.notifyDataSetChanged()
-        super.onResume()
+        super.onViewStateRestored(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -88,14 +88,6 @@ open class FilmsFragment : Fragment() {
         //recyclerView.adapter?.notifyItemChanged(position)
     }
 
-    fun openDetails(id: Int){
-        val intentDetails = Intent(requireContext(), DetailsActivity::class.java)
-        intentDetails.putExtra(MainActivity.EXTRA_FILM,getFilmByID(id))
-        //Log.d("_OTUS_","putExtra")
-        //startActivity(intentDetails, Bundle())
-        getFilm.launch(intentDetails)
-    }
-
     open fun getFilmByID(id: Int): Film {
         return films.find { it.id == id }?: throw IllegalStateException("No film data provided")
     }
@@ -110,36 +102,6 @@ open class FilmsFragment : Fragment() {
     fun unSelectFilms(){
         for (film in films) {
             film.isHighlighted = false
-        }
-    }
-
-    open val getFilm = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            result ->
-        val data = result.data
-        if (result.resultCode == AppCompatActivity.RESULT_OK && data != null){
-            val film: Film? = data.getParcelableExtra(DetailsActivity.EXTRA_FILM)
-            film?.let{
-                val id = it.id
-                films[id] = it
-                Log.d("_OTUS_", it.comment)
-                Log.d("_OTUS_","${it.like}")
-                Log.d("_OTUS_", "film $id")
-            }
-        }
-    }
-
-    val getFilmsPref = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            result ->
-        val data = result.data
-        if (result.resultCode == AppCompatActivity.RESULT_OK && data != null){
-            val filmsPref: MutableList<Film>? = data.getParcelableArrayListExtra(PreferencesActivity.EXTRA_FILMS)
-            if (filmsPref != null) {
-                films = filmsPref
-                initRecycler(films) //Иначе не обновляет лайки в ресайклере
-                for (film in films) {
-                    Log.d("_OTUS_", "main activity FILM ${film.id}, ${film.like}")
-                }
-            }
         }
     }
 

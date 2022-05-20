@@ -17,8 +17,6 @@ open class MainActivity : AppCompatActivity() {
 
         checkSavedState(savedInstanceState)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         openFilms(savedInstanceState)
 
         val navigation = findViewById<NavigationBarView>(R.id.bottomNavigation)
@@ -76,14 +74,15 @@ open class MainActivity : AppCompatActivity() {
 
     fun onFilmDetailsClick(film: Film) {
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, DetailsFragment.newInstance(film))
-            .addToBackStack("details")
+            .add(R.id.fragment_container, DetailsFragment.newInstance(film), DETAILS)
+            .addToBackStack(DETAILS)
             .commit()
     }
 
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount > 0){
-            supportFragmentManager.popBackStack( "details", 1)
+            val detailsFragment = supportFragmentManager.findFragmentByTag(DETAILS)
+            supportFragmentManager.popBackStack( DETAILS, 1)
         } else {
             onCreateDialog()
         }
@@ -308,24 +307,10 @@ open class MainActivity : AppCompatActivity() {
             }
     }
 
-/*    val getFilmsPref = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            result ->
-        val data = result.data
-        if (result.resultCode == RESULT_OK && data != null){
-            val filmsPref: MutableList<Film>? = data.getParcelableArrayListExtra(PreferencesActivity.EXTRA_FILMS)
-            if (filmsPref != null) {
-                films = filmsPref
-                initRecycler(films) //Иначе не обновляет лайки в ресайклере
-                for (film in films) {
-                    Log.d("_OTUS_", "main activity FILM ${film.id}, ${film.like}")
-                }
-            }
-        }
-    }*/
-
     companion object {
         const val EXTRA_FILM = "film"
         const val EXTRA_FILMS = "films"
+        const val DETAILS = "details"
     }
 }
 

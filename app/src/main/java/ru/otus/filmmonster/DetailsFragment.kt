@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 
 class DetailsFragment : Fragment() {
 
@@ -44,11 +45,15 @@ class DetailsFragment : Fragment() {
                 startActivity(Intent.createChooser(intentShare, "Поделиться"))
             }
             film = filmLocal
+    }
 
+    override fun onPause() {
+        film?.comment = view?.findViewById<EditText>(R.id.det_comment)?.text.toString()
+        film?.like = view?.findViewById<CheckBox>(R.id.det_like)!!.isChecked
+        super.onPause()
     }
 
     companion object {
-
         const val EXTRA_FILM = "film"
         @JvmStatic
         fun newInstance(film: Film) =
