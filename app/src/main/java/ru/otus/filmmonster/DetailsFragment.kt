@@ -50,11 +50,16 @@ class DetailsFragment : Fragment() {
     override fun onPause() {
         film?.comment = view?.findViewById<EditText>(R.id.det_comment)?.text.toString()
         film?.like = view?.findViewById<CheckBox>(R.id.det_like)!!.isChecked
+
+        val result = Bundle()
+        result.putParcelable(EXTRA_FILM, film)
+        parentFragmentManager.setFragmentResult(DETAILS_RESULT, result)
         super.onPause()
     }
 
     companion object {
         const val EXTRA_FILM = "film"
+        const val DETAILS_RESULT = "detailsResult"
         @JvmStatic
         fun newInstance(film: Film) =
             DetailsFragment().apply {

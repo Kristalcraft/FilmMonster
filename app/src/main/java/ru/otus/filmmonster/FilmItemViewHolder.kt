@@ -20,8 +20,7 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
         filmPoster.setImageResource(film.poster)
         likeButton.isChecked = film.like
         checkHighlight(film)
-        Log.d("_OTUS_","adapterPosition $adapterPosition")
-        Log.d("_OTUS_","adapterPosition ${filmTitle.id}")
+        Log.d("_OTUS_","film  $adapterPosition  bound")
         detailsButton.setOnClickListener { _ ->
             onFilmDetailsClick(film.id)
         }

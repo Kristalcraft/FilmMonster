@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.TextUtils.indexOf
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 
@@ -25,13 +27,24 @@ open class FilmsFragment : Fragment() {
 
     lateinit var recyclerView: RecyclerView
     open lateinit var films: MutableList<Film>
-    var selected: Int = -1
-    var prevSelected: Int = -1
+    private var selected: Int = -1
+    private var prevSelected: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             films = it.getParcelableArrayList<Film>(EXTRA_FILMS)?: arrayListOf()
+        }
+
+        selected = films.indexOf(films.find { film -> film.isHighlighted })
+
+        parentFragmentManager.setFragmentResultListener(DETAILS_RESULT, this
+        ) { requestKey, result ->
+            val film = result.getParcelable<Film>(EXTRA_FILM)
+            film?.let{
+                films[it.id] = film
+                recyclerView.adapter?.notifyItemChanged(film.id)
+            }
         }
     }
 
@@ -79,7 +92,6 @@ open class FilmsFragment : Fragment() {
         selectFilm(id)
         /*Log.d("_OTUS_","onFilmDetailsClick $id")
         openDetails(id)*/
-
         (activity as MainActivity).onFilmDetailsClick(getFilmByID(id))
     }
 
@@ -95,8 +107,9 @@ open class FilmsFragment : Fragment() {
     fun selectFilm(selected: Int){
         unSelectFilms()
         getFilmByID(selected).isHighlighted = true
-        recyclerView?.adapter?.notifyItemChanged(selected)
-        recyclerView?.adapter?.notifyItemChanged(prevSelected)
+        recyclerView.adapter?.notifyItemChanged(selected)
+        recyclerView.adapter?.notifyItemChanged(prevSelected)
+        Log.d("_OTUS_", "selected: $selected, prevselected: $prevSelected")
     }
 
     fun unSelectFilms(){
@@ -108,6 +121,7 @@ open class FilmsFragment : Fragment() {
     companion object {
         const val EXTRA_FILM = "film"
         const val EXTRA_FILMS = "films"
+        const val DETAILS_RESULT = "detailsResult"
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.

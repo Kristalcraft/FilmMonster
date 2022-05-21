@@ -110,14 +110,6 @@ open class MainActivity : AppCompatActivity() {
         //recyclerView.adapter?.notifyItemChanged(position)
     }
 
-    fun openDetails(id: Int){
-        val intentDetails = Intent(this, DetailsActivity::class.java)
-        intentDetails.putExtra(EXTRA_FILM,getFilmByID(id))
-        //Log.d("_OTUS_","putExtra")
-        //startActivity(intentDetails, Bundle())
-        getFilm.launch(intentDetails)
-    }
-
     open fun getFilmByID(id: Int): Film {
         return films.find { it.id == id }?: throw IllegalStateException("No film data provided")
     }
@@ -278,19 +270,6 @@ open class MainActivity : AppCompatActivity() {
         //val films = mutableListOf<Film>(film1, film2, film3)
         return films
     }
-
-    /*fun selectFilm(selected: Int){
-        unSelectFilms()
-        getFilmByID(selected).isHighlighted = true
-        recyclerView.adapter?.notifyItemChanged(selected)
-        recyclerView.adapter?.notifyItemChanged(prevSelected)
-    }*/
-    fun unSelectFilms(){
-        for (film in films) {
-            film.isHighlighted = false
-        }
-    }
-
 
     open val getFilm = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         result ->
