@@ -1,5 +1,6 @@
 package ru.otus.filmmonster
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -45,6 +46,9 @@ class DetailsFragment : Fragment() {
                 startActivity(Intent.createChooser(intentShare, "Поделиться"))
             }
             film = filmLocal
+
+        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
+        toolbar.setNavigationOnClickListener { view -> (activity as MainActivity).onBackPressed()}
     }
 
     override fun onPause() {

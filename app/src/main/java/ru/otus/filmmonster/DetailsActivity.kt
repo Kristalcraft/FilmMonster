@@ -20,7 +20,7 @@ class DetailsActivity : AppCompatActivity() {
         try {
             val filmLocal = intent?.getParcelableExtra<Film>("film") ?: throw IllegalStateException("No film data provided")
             //Log.d("_OTUS_","intent OK")
-            findViewById<ImageView>(R.id.det_poster).setImageResource(filmLocal.poster)
+            /*findViewById<ImageView>(R.id.det_poster).setImageResource(filmLocal.poster)*/
             findViewById<TextView>(R.id.det_film_name).setText(filmLocal.name)
             findViewById<TextView>(R.id.det_description).setText(filmLocal.description)
             findViewById<EditText>(R.id.det_comment).setText(filmLocal.comment)
