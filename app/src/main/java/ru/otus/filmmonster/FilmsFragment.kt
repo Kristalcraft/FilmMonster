@@ -7,24 +7,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.LinearLayout
-import android.widget.Toast.LENGTH_SHORT
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
 import com.google.android.material.snackbar.Snackbar
 import ru.otus.filmmonster.lib.CheckableImageView
-import java.time.Duration
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FilmsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 open class FilmsFragment : Fragment() {
 
     lateinit var recyclerView: RecyclerView
@@ -99,7 +88,7 @@ open class FilmsFragment : Fragment() {
         getFilmByID(id).like = !getFilmByID(id).like
         likeView.toggle()
         view?.let {
-            val snackbar = Snackbar.make(
+            Snackbar.make(
                 it,
                 if (getFilmByID(id).like) R.string.likeSnackbar
                 else R.string.dislikeSnackbar, Snackbar.LENGTH_LONG
@@ -123,7 +112,7 @@ open class FilmsFragment : Fragment() {
         getFilmByID(selected).isHighlighted = true
         recyclerView.adapter?.notifyItemChanged(selected)
         recyclerView.adapter?.notifyItemChanged(prevSelected)
-        Log.d("_OTUS_", "selected: $selected, prevselected: $prevSelected")
+        //Log.d("_OTUS_", "selected: $selected, prevselected: $prevSelected")
     }
 
     open fun unSelectFilms(){
@@ -136,14 +125,7 @@ open class FilmsFragment : Fragment() {
         const val EXTRA_FILM = "film"
         const val EXTRA_FILMS = "films"
         const val DETAILS_RESULT = "detailsResult"
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FilmsFragment.
-         */
+
         @JvmStatic
         fun newInstance(films: MutableList<Film>) =
             FilmsFragment().apply {

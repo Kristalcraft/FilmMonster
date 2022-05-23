@@ -1,10 +1,7 @@
 package ru.otus.filmmonster
 
-import android.content.Intent
 import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
-import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import android.os.Bundle as AndroidOsBundle
 import com.google.android.material.navigation.NavigationBarView
@@ -62,10 +59,6 @@ open class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     private fun openPreferences() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, FavoritesFragment.newInstance(films))
@@ -81,7 +74,6 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount > 0){
-            val detailsFragment = supportFragmentManager.findFragmentByTag(DETAILS)
             supportFragmentManager.popBackStack( DETAILS, 1)
         } else {
             onCreateDialog()
@@ -269,21 +261,6 @@ open class MainActivity : AppCompatActivity() {
         )
         //val films = mutableListOf<Film>(film1, film2, film3)
         return films
-    }
-
-    open val getFilm = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        result ->
-            val data = result.data
-            if (result.resultCode == RESULT_OK && data != null){
-                val film: Film? = data.getParcelableExtra(DetailsActivity.EXTRA_FILM)
-                film?.let{
-                    val id = it.id
-                    films[id] = it
-                    Log.d("_OTUS_", it.comment)
-                    Log.d("_OTUS_","${it.like}")
-                    Log.d("_OTUS_", "film $id")
-                }
-            }
     }
 
     companion object {
