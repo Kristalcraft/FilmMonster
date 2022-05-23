@@ -3,14 +3,26 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/divider_drawable.xml" value="0.185" />
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/divider_vertical.xml" value="0.1" />
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.153" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/ic_baseline_favorite_24_filed.xml" value="0.1785" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/ic_baseline_favorite_24_focused.xml" value="0.1395" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.1" />
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/ic_baseline_video_library_24.xml" value="0.114" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/like_button.xml" value="0.1" />
-        <entry key="..\:/WORK/FilmMonster/app/src/main/res/layout/activity_main.xml" value="0.275" />
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/layout/activity_bottom_navigation.xml" value="0.275" />
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/layout/activity_preferences.xml" value="0.1" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/layout/detailes.xml" value="0.275" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/layout/details.xml" value="0.28883495145631066" />
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/layout/film_fragment.xml" value="0.275" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/layout/film_unit.xml" value="0.29219143576826195" />
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/layout/fragment_blank.xml" value="0.18802083333333333" />
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/layout/fragment_detailes.xml" value="0.35260416666666666" />
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/layout/fragment_favorites.xml" value="0.275" />
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/layout/mmmmmmm.xml" value="0.275" />
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/menu/navigation_items.xml" value="0.275" />
       </map>
     </option>
   </component>

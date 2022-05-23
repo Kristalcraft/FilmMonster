@@ -15,7 +15,7 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
     private val detailsButton: Button = itemView.findViewById(R.id.button_details)
     private val likeButton: CheckableImageView = itemView.findViewById(R.id.like_button)
 
-    fun bind(film: Film, onFilmDetailsClick: (position: Int) -> Unit, onLikeClick: (position: Int) -> Unit){
+    fun bind(film: Film, onFilmDetailsClick: (position: Int) -> Unit, onLikeClick: (position: Int, likeView: CheckableImageView) -> Unit){
         filmTitle.setText(film.name)
         filmPoster.setImageResource(film.poster)
         likeButton.isChecked = film.like
@@ -26,8 +26,7 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
         }
 
         likeButton.setOnClickListener {
-                _ -> onLikeClick(film.id);
-            likeButton.toggle()
+                _, -> onLikeClick(film.id, likeButton);
         }
     }
 

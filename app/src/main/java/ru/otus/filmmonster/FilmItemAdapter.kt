@@ -3,11 +3,12 @@ package ru.otus.filmmonster
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import ru.otus.filmmonster.lib.CheckableImageView
 
 class FilmItemAdapter (
     private val films: MutableList<Film>,
     private val onFilmDetailsClick: (id: Int) -> Unit,
-    private val onLikeClick: (id: Int) -> Unit
+    private val onLikeClick: (id: Int, view: CheckableImageView) -> Unit
     ):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder{

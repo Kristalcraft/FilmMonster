@@ -1,21 +1,23 @@
 package ru.otus.filmmonster
 
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.TextUtils.indexOf
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.Toast.LENGTH_SHORT
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentResultListener
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_SHORT
+import com.google.android.material.snackbar.Snackbar
+import ru.otus.filmmonster.lib.CheckableImageView
+import java.time.Duration
 
 
 /**
@@ -27,8 +29,8 @@ open class FilmsFragment : Fragment() {
 
     lateinit var recyclerView: RecyclerView
     open lateinit var films: MutableList<Film>
-    private var selected: Int = -1
-    private var prevSelected: Int = -1
+    var selected: Int = -1
+    var prevSelected: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,29 +84,41 @@ open class FilmsFragment : Fragment() {
         recyclerView.adapter = FilmItemAdapter(
             films,
             {id -> onFilmDetailsClick(id)},
-            {id -> onLikeClick(id)}
+            {id, likeView -> onLikeClick(id, likeView)}
         )
     }
 
-    fun onFilmDetailsClick(id: Int) {
+    open fun onFilmDetailsClick(id: Int) {
         prevSelected = selected
         selected = id
         selectFilm(id)
-        /*Log.d("_OTUS_","onFilmDetailsClick $id")
-        openDetails(id)*/
         (activity as MainActivity).onFilmDetailsClick(getFilmByID(id))
     }
 
-    open fun onLikeClick(id: Int){
+    open fun onLikeClick(id: Int, likeView: CheckableImageView){
         getFilmByID(id).like = !getFilmByID(id).like
-        //recyclerView.adapter?.notifyItemChanged(position)
+        likeView.toggle()
+        view?.let {
+            val snackbar = Snackbar.make(
+                it,
+                if (getFilmByID(id).like) R.string.likeSnackbar
+                else R.string.dislikeSnackbar, Snackbar.LENGTH_LONG
+            )
+                .setAction(R.string.cancel) {
+                    getFilmByID(id).like = !getFilmByID(id).like
+                    likeView.toggle()
+                }
+                .setAnimationMode(Snackbar.ANIMATION_MODE_FADE)
+                .setAnchorView(likeView)
+                .show()
+        }
     }
 
     open fun getFilmByID(id: Int): Film {
         return films.find { it.id == id }?: throw IllegalStateException("No film data provided")
     }
 
-    fun selectFilm(selected: Int){
+    open fun selectFilm(selected: Int){
         unSelectFilms()
         getFilmByID(selected).isHighlighted = true
         recyclerView.adapter?.notifyItemChanged(selected)
@@ -112,7 +126,7 @@ open class FilmsFragment : Fragment() {
         Log.d("_OTUS_", "selected: $selected, prevselected: $prevSelected")
     }
 
-    fun unSelectFilms(){
+    open fun unSelectFilms(){
         for (film in films) {
             film.isHighlighted = false
         }

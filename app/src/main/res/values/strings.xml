@@ -16,4 +16,7 @@
     <string name="no">Нет</string>
     <string name="favorites">Избранное</string>
     <string name="films">Фильмы</string>
+    <string name="likeSnackbar">Фильм добавлен в избранное</string>
+    <string name="dislikeSnackbar">Фильм удален из избранного</string>
+    <string name="cancel">Отмена</string>
 </resources>
