@@ -3,6 +3,7 @@ package ru.otus.filmmonster
 import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AlertDialog
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.os.Bundle as AndroidOsBundle
 import com.google.android.material.navigation.NavigationBarView
 
@@ -16,7 +17,7 @@ open class MainActivity : AppCompatActivity() {
 
         openFilms(savedInstanceState)
 
-        val navigation = findViewById<NavigationBarView>(R.id.bottomNavigation)
+        val navigation: BottomNavigationView= findViewById(R.id.bottomNavigation)
 
         navigation.setOnItemSelectedListener {
             when (it.itemId) {
@@ -266,7 +267,7 @@ open class MainActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_FILM = "film"
         const val EXTRA_FILMS = "films"
-        const val DETAILS = "details"
+        const val DETAILS = "fragment_details"
     }
 }
 

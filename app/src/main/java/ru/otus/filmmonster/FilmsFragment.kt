@@ -3,7 +3,6 @@ package ru.otus.filmmonster
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,7 +48,7 @@ open class FilmsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.film_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_film, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,7 +90,7 @@ open class FilmsFragment : Fragment() {
             Snackbar.make(
                 it,
                 if (getFilmByID(id).like) R.string.likeSnackbar
-                else R.string.dislikeSnackbar, Snackbar.LENGTH_LONG
+                else R.string.dislikeSnackbar, Snackbar.LENGTH_SHORT
             )
                 .setAction(R.string.cancel) {
                     getFilmByID(id).like = !getFilmByID(id).like
