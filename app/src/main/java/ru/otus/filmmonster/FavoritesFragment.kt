@@ -19,7 +19,7 @@ import ru.otus.filmmonster.lib.CheckableImageView
 class FavoritesFragment : FilmsFragment() {
 
     var favoriteFilms: MutableList<Film> = mutableListOf()
-    override var films: MutableList<Film> = mutableListOf()
+     var films: MutableList<Film> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,20 +42,20 @@ class FavoritesFragment : FilmsFragment() {
                 favoriteFilms.add(film)
             }
         }
-        selected = favoriteFilms.indexOf(favoriteFilms.find { film -> film.isHighlighted }?: -1)
-        initRecycler(favoriteFilms)
+       /* selected = favoriteFilms.indexOf(favoriteFilms.find { film -> film.isHighlighted }?: -1)
+        initRecycler(favoriteFilms)*/
     }
 
-    override fun getFilmByID(id: Int): Film{
+    fun getFilmByID(id: Int): Film{
         return favoriteFilms.find { it.id == id }?: throw IllegalStateException("No film data provided")
     }
 
-    override fun onFilmDetailsClick(id: Int) {
+    /*override fun onFilmDetailsClick(id: Int) {
         prevSelected = selected
         selected = favoriteFilms.indexOf(getFilmByID(id))
         selectFilm(selected)
         (activity as MainActivity).onFilmDetailsClick(getFilmByID(id))
-    }
+    }*/
 
     override fun onLikeClick(id: Int, likeView: CheckableImageView){
         val position = favoriteFilms.indexOf(getFilmByID(id))
@@ -83,20 +83,20 @@ class FavoritesFragment : FilmsFragment() {
         recyclerView.adapter?.notifyItemRemoved(position)
     }
 
-    override fun selectFilm(selected: Int){
+     /*fun selectFilm(selected: Int){
         unSelectFilms()
         favoriteFilms[selected].isHighlighted = true
         recyclerView.adapter?.notifyItemChanged(selected)
         recyclerView.adapter?.notifyItemChanged(prevSelected)
         Log.d("_OTUS_", "selected: $selected, prevselected: $prevSelected")
-    }
+    }*/
 
 
-    override fun unSelectFilms(){
+    /*override fun unSelectFilms(){
         for (film in favoriteFilms) {
             film.isHighlighted = false
         }
-    }
+    }*/
 
     companion object {
 

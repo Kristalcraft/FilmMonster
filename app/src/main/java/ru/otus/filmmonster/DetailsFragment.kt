@@ -7,17 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.activityViewModels
 
 class DetailsFragment : Fragment() {
 
-    private var film: Film? = null
+    private val viewModel: FilmsViewModel by activityViewModels()
+  /*  private var film: Film? = null*/
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             film = it.getParcelable<Film>(EXTRA_FILM)
         }
-    }
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,33 +31,29 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val filmLocal = film?: throw IllegalStateException("No film data provided")
+        /*val filmLocal = film?: throw IllegalStateException("No film data provided")*/
             //Log.d("_OTUS_","intent OK")
-            view.findViewById<ImageView>(R.id.det_poster).setImageResource(filmLocal.poster)
-            view.findViewById<TextView>(R.id.det_film_name).setText(filmLocal.name)
-            view.findViewById<TextView>(R.id.det_description).setText(filmLocal.description)
-            view.findViewById<EditText>(R.id.det_comment).setText(filmLocal.comment)
-            view.findViewById<CheckBox>(R.id.det_like).isChecked = filmLocal.like
-
-            view.findViewById<Button>(R.id.det_invite).setOnClickListener(){
+            viewModel.selectedFilm.value?.apply {
+                view.findViewById<ImageView>(R.id.det_poster).setImageResource(poster)
+                view.findViewById<TextView>(R.id.det_film_name).setText(name)
+                view.findViewById<TextView>(R.id.det_description).setText(description)
+                view.findViewById<EditText>(R.id.det_comment).setText(comment)
+                view.findViewById<CheckBox>(R.id.det_like).isChecked = like
+                view.findViewById<Button>(R.id.det_invite).setOnClickListener(){
                 val intentShare = Intent(Intent.ACTION_SEND)
-                intentShare.putExtra(Intent.EXTRA_TEXT, "Советую посмотреть фильм ${getString(filmLocal.name)}")
+                intentShare.putExtra(Intent.EXTRA_TEXT, "Советую посмотреть фильм ${getString(name)}")
                 intentShare.type = "text/plain"
                 startActivity(Intent.createChooser(intentShare, "Поделиться"))
-            }
-            film = filmLocal
-
+                }
+            }?:throw IllegalStateException("No film data provided")
         val toolbar: Toolbar = view.findViewById(R.id.toolbar)
         toolbar.setNavigationOnClickListener { view -> (activity as MainActivity).onBackPressed()}
     }
 
     override fun onPause() {
-        film?.comment = view?.findViewById<EditText>(R.id.det_comment)?.text.toString()
-        film?.like = view?.findViewById<CheckBox>(R.id.det_like)!!.isChecked
-
-        val result = Bundle()
-        result.putParcelable(EXTRA_FILM, film)
-        parentFragmentManager.setFragmentResult(DETAILS_RESULT, result)
+        viewModel.onFilmChanged(
+        view?.findViewById<EditText>(R.id.det_comment)?.text.toString(),
+        view?.findViewById<CheckBox>(R.id.det_like)!!.isChecked)
         super.onPause()
     }
 

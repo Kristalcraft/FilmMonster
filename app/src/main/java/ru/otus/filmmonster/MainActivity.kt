@@ -1,21 +1,27 @@
 package ru.otus.filmmonster
 
 import android.os.Parcelable
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.os.Bundle as AndroidOsBundle
 import com.google.android.material.navigation.NavigationBarView
 
 open class MainActivity : AppCompatActivity() {
 
+    private val viewModel: FilmsViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: AndroidOsBundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        checkSavedState(savedInstanceState)
-
+        /*checkSavedState(savedInstanceState)*/
         openFilms(savedInstanceState)
+
+        /*openFilms(savedInstanceState)*/
 
         val navigation: BottomNavigationView= findViewById(R.id.bottomNavigation)
 
@@ -31,7 +37,7 @@ open class MainActivity : AppCompatActivity() {
     fun openFilms(savedInstanceState: android.os.Bundle?){
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, FilmsFragment.newInstance(films))
+                .replace(R.id.fragment_container, FilmsFragment.newInstance())
                 .commit()
         }
         else {
@@ -48,17 +54,17 @@ open class MainActivity : AppCompatActivity() {
         return true
     }
 
-    fun checkSavedState(savedInstanceState: android.os.Bundle?){
+    /*fun checkSavedState(savedInstanceState: android.os.Bundle?){
         if (savedInstanceState == null) {
-            films = createFilms()
+            viewModel.films.observe(this, Observer<ArrayList<Film>>{ repos -> this.films = repos; openFilms(savedInstanceState)})
             selected = -1
             prevSelected = -1
         } else {
             selected = savedInstanceState.getInt("select")
             prevSelected = savedInstanceState.getInt("prevSelect")
-            films = savedInstanceState.getParcelableArrayList(EXTRA_FILMS)!!
+            viewModel.films.observe(this, Observer<ArrayList<Film>>{ repos -> this.films = repos; openFilms(savedInstanceState)})
         }
-    }
+    }*/
 
     private fun openPreferences() {
         supportFragmentManager.beginTransaction()
@@ -66,9 +72,9 @@ open class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    fun onFilmDetailsClick(film: Film) {
+    fun onFilmDetailsClick(id: Int) {
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, DetailsFragment.newInstance(film), DETAILS)
+            .add(R.id.fragment_container, DetailsFragment.newInstance(viewModel.getFilmByID(id)), DETAILS)
             .addToBackStack(DETAILS)
             .commit()
     }
@@ -112,7 +118,7 @@ open class MainActivity : AppCompatActivity() {
     lateinit var films: MutableList<Film>
 
 
-    private fun createFilms(): MutableList<Film> {
+    /*private fun createFilms(): MutableList<Film> {
          films = mutableListOf(
           Film(
             0,
@@ -262,7 +268,7 @@ open class MainActivity : AppCompatActivity() {
         )
         //val films = mutableListOf<Film>(film1, film2, film3)
         return films
-    }
+    }*/
 
     companion object {
         const val EXTRA_FILM = "film"
