@@ -1,23 +1,25 @@
 package ru.otus.filmmonster
 
-import android.os.Parcelable
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.os.Bundle as AndroidOsBundle
-import com.google.android.material.navigation.NavigationBarView
+import ru.otus.filmmonster.UI.DetailsFragment
+import ru.otus.filmmonster.UI.FavoritesFragment
+import ru.otus.filmmonster.UI.FilmsFragment
+import ru.otus.filmmonster.repository.FilmsRepository
 
 open class MainActivity : AppCompatActivity() {
 
-    private val viewModel: FilmsViewModel by viewModels()
+    /*private val viewModel: FilmsViewModel by viewModels()*/
+    private lateinit var viewModel: FilmsViewModel
 
     override fun onCreate(savedInstanceState: AndroidOsBundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        viewModel = ViewModelProvider(this, FilmsViewModelFactory(FilmsRepository()))[FilmsViewModel::class.java]
         /*checkSavedState(savedInstanceState)*/
         openFilms(savedInstanceState)
 
@@ -68,7 +70,7 @@ open class MainActivity : AppCompatActivity() {
 
     private fun openPreferences() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, FavoritesFragment.newInstance(films))
+            .replace(R.id.fragment_container, FavoritesFragment())
             .commit()
     }
 
@@ -101,179 +103,25 @@ open class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putInt("select", selected)
         outState.putInt("prevSelect", prevSelected)
-        outState.putParcelableArrayList(EXTRA_FILMS, ArrayList<Parcelable>(films))
     }
 
-    open fun onLikeClick(id: Int){
-        getFilmByID(id).like = !getFilmByID(id).like
-        //recyclerView.adapter?.notifyItemChanged(position)
-    }
 
-    open fun getFilmByID(id: Int): Film {
-        return films.find { it.id == id }?: throw IllegalStateException("No film data provided")
-    }
+
+
     var selected: Int = -1
     var prevSelected: Int = -1
 
-    lateinit var films: MutableList<Film>
-
-
-    /*private fun createFilms(): MutableList<Film> {
-         films = mutableListOf(
-          Film(
-            0,
-            R.string.film1,
-            R.drawable.norway,
-            R.string.description1,
-        ),
-         Film(
-            1,
-            R.string.film2,
-            R.drawable.the_wire,
-            R.string.description2,
-        ),
-        Film(
-            2,
-            R.string.film3,
-            R.drawable.true_detective,
-            R.string.description3,
-        ),
-         Film(
-             3,
-             R.string.film1,
-             R.drawable.norway,
-             R.string.description1,
-         ),
-         Film(
-             4,
-             R.string.film2,
-             R.drawable.the_wire,
-             R.string.description2,
-         ),
-         Film(
-             5,
-             R.string.film3,
-             R.drawable.true_detective,
-             R.string.description3,
-         ),
-         Film(
-             6,
-             R.string.film1,
-             R.drawable.norway,
-             R.string.description1,
-         ),
-         Film(
-             7,
-             R.string.film2,
-             R.drawable.the_wire,
-             R.string.description2,
-         ),
-         Film(
-             8,
-             R.string.film3,
-             R.drawable.true_detective,
-             R.string.description3,
-         ),
-         Film(
-             9,
-             R.string.film1,
-             R.drawable.norway,
-             R.string.description1,
-         ),
-         Film(
-             10,
-             R.string.film2,
-             R.drawable.the_wire,
-             R.string.description2,
-         ),
-         Film(
-             11,
-             R.string.film3,
-             R.drawable.true_detective,
-             R.string.description3,
-         ),
-         Film(
-             12,
-             R.string.film1,
-             R.drawable.norway,
-             R.string.description1,
-         ),
-         Film(
-             13,
-             R.string.film2,
-             R.drawable.the_wire,
-             R.string.description2,
-         ),
-         Film(
-             14,
-             R.string.film3,
-             R.drawable.true_detective,
-             R.string.description3,
-         ),
-         Film(
-             15,
-             R.string.film1,
-             R.drawable.norway,
-             R.string.description1,
-         ),
-         Film(
-             16,
-             R.string.film2,
-             R.drawable.the_wire,
-             R.string.description2,
-         ),
-         Film(
-             17,
-             R.string.film3,
-             R.drawable.true_detective,
-             R.string.description3,
-         ),
-         Film(
-             18,
-             R.string.film1,
-             R.drawable.norway,
-             R.string.description1,
-         ),
-         Film(
-             19,
-             R.string.film2,
-             R.drawable.the_wire,
-             R.string.description2,
-         ),
-         Film(
-             20,
-             R.string.film3,
-             R.drawable.true_detective,
-             R.string.description3,
-         ),
-         Film(
-             21,
-             R.string.film1,
-             R.drawable.norway,
-             R.string.description1,
-         ),
-         Film(
-             22,
-             R.string.film2,
-             R.drawable.the_wire,
-             R.string.description2,
-         ),
-         Film(
-             23,
-             R.string.film3,
-             R.drawable.true_detective,
-             R.string.description3,
-         ),
-
-        )
-        //val films = mutableListOf<Film>(film1, film2, film3)
-        return films
-    }*/
 
     companion object {
         const val EXTRA_FILM = "film"
         const val EXTRA_FILMS = "films"
         const val DETAILS = "fragment_details"
+    }
+}
+
+class FilmsViewModelFactory(val filmsRepository: FilmsRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return FilmsViewModel(filmsRepository) as T
     }
 }
 

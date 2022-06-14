@@ -3,12 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/user/.gradle/caches/transforms-3/bd6d0e44f2aa57426d64e02a13067df9/transformed/material-1.6.0/res/drawable/mtrl_ic_error.xml" value="0.192" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/divider_drawable.xml" value="0.185" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/divider_vertical.xml" value="0.1" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.153" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/ic_baseline_favorite_24_filed.xml" value="0.1785" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/ic_baseline_favorite_24_focused.xml" value="0.1395" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.1" />
+        <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/ic_baseline_image_filler.xml" value="0.2115" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/ic_baseline_video_library_24.xml" value="0.114" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/drawable/like_button.xml" value="0.1" />
         <entry key="..\:/WORK/FilmMonster/app/src/main/res/layout/activity_bottom_navigation.xml" value="0.275" />

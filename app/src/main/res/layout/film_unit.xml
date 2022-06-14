@@ -15,7 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:scaleType="centerCrop"
         android:layout_margin="10dp"
-        android:src="@drawable/norway"/>
+        android:src="@drawable/ic_baseline_image_filler"/>
 
     <TextView
         android:id="@+id/film_name"

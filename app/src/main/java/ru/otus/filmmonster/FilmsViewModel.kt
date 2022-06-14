@@ -3,161 +3,23 @@ package ru.otus.filmmonster
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.paging.PagingData
+import ru.otus.filmmonster.repository.FilmsRepository
 
-class FilmsViewModel : ViewModel() {
+class FilmsViewModel(
+    private val filmsRepository: FilmsRepository
+) : ViewModel() {
 
     /*private*/ var mFilms = MutableLiveData<ArrayList<Film>>()
     private val mError = MutableLiveData<String>()
     private val mSelectedFilm =  MutableLiveData<Film>()
 
-    init {
-        mFilms.value = arrayListOf(
-            Film(
-                587,
-                R.string.film1,
-                R.drawable.norway,
-                R.string.description1,
-            ),
-            Film(
-                752,
-                R.string.film2,
-                R.drawable.the_wire,
-                R.string.description2,
-            ),
-            Film(
-                785,
-                R.string.film3,
-                R.drawable.true_detective,
-                R.string.description3,
-            ),
-            Film(
-                62,
-                R.string.film1,
-                R.drawable.norway,
-                R.string.description1,
-            ),
-            Film(
-                90,
-                R.string.film2,
-                R.drawable.the_wire,
-                R.string.description2,
-            ),
-            Film(
-                51,
-                R.string.film3,
-                R.drawable.true_detective,
-                R.string.description3,
-            ),
-            Film(
-                367,
-                R.string.film1,
-                R.drawable.norway,
-                R.string.description1,
-            ),
-            Film(
-                514,
-                R.string.film2,
-                R.drawable.the_wire,
-                R.string.description2,
-            ),
-            Film(
-                63,
-                R.string.film3,
-                R.drawable.true_detective,
-                R.string.description3,
-            ),
-            Film(
-                76,
-                R.string.film1,
-                R.drawable.norway,
-                R.string.description1,
-            ),
-            Film(
-                446,
-                R.string.film2,
-                R.drawable.the_wire,
-                R.string.description2,
-            ),
-            Film(
-                22145,
-                R.string.film3,
-                R.drawable.true_detective,
-                R.string.description3,
-            ),
-            Film(
-                5478,
-                R.string.film1,
-                R.drawable.norway,
-                R.string.description1,
-            ),
-            Film(
-                125,
-                R.string.film2,
-                R.drawable.the_wire,
-                R.string.description2,
-            ),
-            Film(
-                983,
-                R.string.film3,
-                R.drawable.true_detective,
-                R.string.description3,
-            ),
-            Film(
-                4,
-                R.string.film1,
-                R.drawable.norway,
-                R.string.description1,
-            ),
-            Film(
-                25,
-                R.string.film2,
-                R.drawable.the_wire,
-                R.string.description2,
-            ),
-            Film(
-                9328,
-                R.string.film3,
-                R.drawable.true_detective,
-                R.string.description3,
-            ),
-            Film(
-                674,
-                R.string.film1,
-                R.drawable.norway,
-                R.string.description1,
-            ),
-            Film(
-                584,
-                R.string.film2,
-                R.drawable.the_wire,
-                R.string.description2,
-            ),
-            Film(
-                5748,
-                R.string.film3,
-                R.drawable.true_detective,
-                R.string.description3,
-            ),
-            Film(
-                5979,
-                R.string.film1,
-                R.drawable.norway,
-                R.string.description1,
-            ),
-            Film(
-                87,
-                R.string.film2,
-                R.drawable.the_wire,
-                R.string.description2,
-            ),
-            Film(
-                153,
-                R.string.film3,
-                R.drawable.true_detective,
-                R.string.description3,
-            ),
+    val pagedFilms: LiveData<PagingData<Film>>
 
-            )
+    init {
+
+        pagedFilms = filmsRepository.getPagedFilms()
+        var x = pagedFilms.value
     }
     val selectedFilm: LiveData<Film> = mSelectedFilm
     val films: LiveData<ArrayList<Film>> = mFilms

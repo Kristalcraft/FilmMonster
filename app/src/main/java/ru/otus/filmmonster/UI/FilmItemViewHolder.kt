@@ -1,4 +1,4 @@
-package ru.otus.filmmonster
+package ru.otus.filmmonster.UI
 
 import android.graphics.Color
 import android.util.Log
@@ -7,6 +7,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import ru.otus.filmmonster.Film
+import ru.otus.filmmonster.R
 import ru.otus.filmmonster.lib.CheckableImageView
 
 class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
@@ -16,8 +19,8 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
     private val likeButton: CheckableImageView = itemView.findViewById(R.id.like_button)
 
     fun bind(film: Film, onFilmDetailsClick: (position: Int) -> Unit, onLikeClick: (position: Int, likeView: CheckableImageView) -> Unit){
-        filmTitle.setText(film.name)
-        filmPoster.setImageResource(film.poster)
+        filmTitle.text = film.name
+        /*filmPoster.setImageResource(film.poster)*/
         likeButton.isChecked = film.like
         checkHighlight(film)
         Log.d("_OTUS_","film  $adapterPosition  bound")
@@ -28,6 +31,13 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
         likeButton.setOnClickListener {
                 _, -> onLikeClick(film.id, likeButton);
         }
+
+        Glide.with(filmPoster.context)
+            .load(film.poster)
+            .placeholder(R.drawable.ic_baseline_image_filler)
+            .error(com.google.android.material.R.drawable.mtrl_ic_error)
+            .centerCrop()
+            .into(filmPoster)
     }
 
 

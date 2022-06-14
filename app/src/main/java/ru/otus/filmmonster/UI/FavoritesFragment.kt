@@ -1,13 +1,13 @@
-package ru.otus.filmmonster
+package ru.otus.filmmonster.UI
 
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.snackbar.Snackbar
+import ru.otus.filmmonster.Film
+import ru.otus.filmmonster.R
 import ru.otus.filmmonster.lib.CheckableImageView
 
 
@@ -46,7 +46,7 @@ class FavoritesFragment : FilmsFragment() {
         initRecycler(favoriteFilms)*/
     }
 
-    fun getFilmByID(id: Int): Film{
+    fun getFilmByID(id: Int): Film {
         return favoriteFilms.find { it.id == id }?: throw IllegalStateException("No film data provided")
     }
 
@@ -98,7 +98,7 @@ class FavoritesFragment : FilmsFragment() {
         }
     }*/
 
-    companion object {
+    /*companion object {
 
         @JvmStatic
         fun newInstance(films: MutableList<Film>) =
@@ -107,5 +107,5 @@ class FavoritesFragment : FilmsFragment() {
                     putParcelableArrayList(EXTRA_FILMS, ArrayList<Parcelable>(films))
                 }
             }
-    }
+    }*/
 }
