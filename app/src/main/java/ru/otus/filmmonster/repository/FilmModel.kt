@@ -1,13 +1,25 @@
 package ru.otus.filmmonster.repository
 
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
 
+
+@Entity(
+    indices = [
+        Index(value = ["id"]),
+        Index(value = ["name"])
+    ]
+)
+
 data class FilmModel (
     @SerializedName(value="id", alternate = ["kinopoiskId", "filmId"])
     @Expose
+    @PrimaryKey(autoGenerate = false)
     val id: Int,
     @SerializedName("nameRu")
     @Expose
@@ -16,10 +28,9 @@ data class FilmModel (
     @Expose
     val poster: String,
     @Expose
-    var description: String = "",
+    var description: String? = "",
     @Expose
-    var like: Boolean = false,
+    var like: Boolean? = false,
     @Expose
-    var comment: String = "",
-    var isHighlighted: Boolean = false
+    var comment: String? = "",
 )

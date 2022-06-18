@@ -5,7 +5,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.otus.filmmonster.repository.DBinstance
 import ru.otus.filmmonster.repository.FilmsApi
+import java.util.concurrent.Executors
 
 class App : Application() {
 
@@ -41,6 +43,10 @@ class App : Application() {
             .build()
 
         api = retrofit.create(FilmsApi::class.java)
+
+
+        DBinstance.getDBinstance(this)
+
     }
 
     companion object {

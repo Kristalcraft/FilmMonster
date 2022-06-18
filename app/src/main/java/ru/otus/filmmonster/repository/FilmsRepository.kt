@@ -10,11 +10,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.otus.filmmonster.App
 import ru.otus.filmmonster.Film
+import java.util.concurrent.Executors
 
 class FilmsRepository(
 ) {
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+
+    private lateinit var films: ArrayList<FilmModel>
 
     fun getPagedFilms(): LiveData<PagingData<Film>>{
         val loader: FilmsPageLoader = { pageIndex, pageSize ->
@@ -36,6 +39,8 @@ class FilmsRepository(
 
        val response =  App.instance.api.getTop250Films("TOP_250_BEST_FILMS", pageIndex)
 
+        films = response.films
+
         response.films.forEach { model ->
             list.add(
                 Film(
@@ -48,7 +53,11 @@ class FilmsRepository(
                 )
             )
         }
-
+        Executors.newSingleThreadExecutor().execute(
+        Runnable{
+            DBinstance.getDBinstance(App.instance.applicationContext)?.getFilmDao()
+                ?.insert(response.films)
+        })
         return@withContext list
             }
 
