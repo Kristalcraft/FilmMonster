@@ -8,9 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import ru.otus.filmmonster.Film
 import ru.otus.filmmonster.R
 import ru.otus.filmmonster.lib.CheckableImageView
+import ru.otus.filmmonster.repository.FilmModel
 
 class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
     private val filmTitle: TextView = itemView.findViewById(R.id.film_name)
@@ -18,11 +18,11 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
     private val detailsButton: Button = itemView.findViewById(R.id.button_details)
     private val likeButton: CheckableImageView = itemView.findViewById(R.id.like_button)
 
-    fun bind(film: Film, onFilmDetailsClick: (position: Int) -> Unit, onLikeClick: (position: Int, likeView: CheckableImageView) -> Unit){
+    fun bind(film: FilmModel, onFilmDetailsClick: (position: Int) -> Unit, onLikeClick: (position: Int, likeView: CheckableImageView) -> Unit){
         filmTitle.text = film.name
         /*filmPoster.setImageResource(film.poster)*/
-        likeButton.isChecked = film.like
-        checkHighlight(film)
+        likeButton.isChecked = film.like?: false
+        /*checkHighlight(film)*/
         Log.d("_OTUS_","film  $adapterPosition  bound")
         detailsButton.setOnClickListener { _ ->
             onFilmDetailsClick(film.id)
@@ -41,11 +41,11 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
     }
 
 
-    fun checkHighlight(film: Film){
+    /*fun checkHighlight(film: FilmModel){
         if (!film.isHighlighted) {
             filmTitle.setTextColor(Color.BLACK)
         }else{
             filmTitle.setTextColor(Color.RED)
         }
-    }
+    }*/
 }

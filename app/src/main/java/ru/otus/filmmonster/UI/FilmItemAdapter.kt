@@ -4,15 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import ru.otus.filmmonster.Film
 import ru.otus.filmmonster.R
 import ru.otus.filmmonster.lib.CheckableImageView
+import ru.otus.filmmonster.repository.FilmModel
 
 class FilmItemAdapter (
-    private var films: ArrayList<Film>,
+    private var films: ArrayList<FilmModel>,
     private val onFilmDetailsClick: (id: Int) -> Unit,
     private val onLikeClick: (id: Int, view: CheckableImageView) -> Unit
-    ):PagingDataAdapter<Film, FilmItemViewHolder>(DiffCallback()) {
+    ):PagingDataAdapter<FilmModel, FilmItemViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilmItemViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -42,7 +42,7 @@ class FilmItemAdapter (
 
     }*/
 
-class DiffCallback : DiffUtil.ItemCallback<Film>() {
+class DiffCallback : DiffUtil.ItemCallback<FilmModel>() {
 
 
     /* private val oldList: ArrayList<Film> = oldFilms
@@ -71,15 +71,14 @@ class DiffCallback : DiffUtil.ItemCallback<Film>() {
                 oldFilm.isHighlighted == newFilm.isHighlighted)
     }*/
 
-    override fun areItemsTheSame(oldItem: Film, newItem: Film): Boolean {
+    override fun areItemsTheSame(oldItem: FilmModel, newItem: FilmModel): Boolean {
         return newItem.id == oldItem.id
     }
 
-    override fun areContentsTheSame(oldItem: Film, newItem: Film): Boolean {
+    override fun areContentsTheSame(oldItem: FilmModel, newItem: FilmModel): Boolean {
         return (newItem.id == oldItem.id &&
                 newItem.like == oldItem.like &&
-                newItem.comment == oldItem.comment &&
-                newItem.isHighlighted == oldItem.isHighlighted)
+                newItem.comment == oldItem.comment)
     }
 }
 }

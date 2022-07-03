@@ -76,7 +76,7 @@ open class MainActivity : AppCompatActivity() {
 
     fun onFilmDetailsClick(id: Int) {
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, DetailsFragment.newInstance(viewModel.getFilmByID(id)), DETAILS)
+            .add(R.id.fragment_container, DetailsFragment(), DETAILS)
             .addToBackStack(DETAILS)
             .commit()
     }

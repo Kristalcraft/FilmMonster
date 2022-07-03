@@ -2,6 +2,8 @@ package ru.otus.filmmonster.repository
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import java.util.concurrent.Executors
 
 private const val DATABASE_NAME = "FILMS_DB"
 object DBinstance {
@@ -11,6 +13,9 @@ object DBinstance {
         if (instance == null) {
                 instance = Room.databaseBuilder(context, FilmDB::class.java, DATABASE_NAME)
                     .allowMainThreadQueries()
+                    .setQueryCallback(RoomDatabase.QueryCallback { sqlQuery, bindArgs ->
+                println("SQL Query: $sqlQuery SQL Args: $bindArgs")
+            }, Executors.newSingleThreadExecutor())
                     .build()
 
 

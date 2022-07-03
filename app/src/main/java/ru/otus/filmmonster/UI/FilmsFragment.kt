@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import ru.otus.filmmonster.*
 import ru.otus.filmmonster.lib.CheckableImageView
+import ru.otus.filmmonster.repository.FilmModel
 import ru.otus.filmmonster.repository.FilmsRepository
 
 open class FilmsFragment : Fragment() {
@@ -86,7 +87,7 @@ open class FilmsFragment : Fragment() {
                 {id, likeView -> onLikeClick(id, likeView)}
             )
 
-        viewModel.pagedFilms.observe(viewLifecycleOwner, Observer<PagingData<Film>>{
+        viewModel.pagedFilms.observe(viewLifecycleOwner, Observer<PagingData<FilmModel>>{
             lifecycleScope.launch { (recyclerView.adapter as FilmItemAdapter).submitData(it) }
         })
     }
@@ -100,16 +101,16 @@ open class FilmsFragment : Fragment() {
     }
 
     open fun onLikeClick(id: Int, likeView: CheckableImageView){
-        viewModel.onLikeChanged(id)
+        /*viewModel.onLikeChanged(id)*/
         likeView.toggle()
         view?.let {
             Snackbar.make(
                 it,
-                if (viewModel.getFilmByID(id).like) R.string.likeSnackbar
+                if (likeView.isChecked) R.string.likeSnackbar
                 else R.string.dislikeSnackbar, Snackbar.LENGTH_SHORT
             )
                 .setAction(R.string.cancel) {
-                    viewModel.onLikeChanged(id)
+                    /*viewModel.onLikeChanged(id)*/
                     likeView.toggle()
                 }
                 .setAnimationMode(Snackbar.ANIMATION_MODE_FADE)

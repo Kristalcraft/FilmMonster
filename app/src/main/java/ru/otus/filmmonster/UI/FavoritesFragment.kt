@@ -6,9 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.snackbar.Snackbar
-import ru.otus.filmmonster.Film
+
 import ru.otus.filmmonster.R
 import ru.otus.filmmonster.lib.CheckableImageView
+import ru.otus.filmmonster.repository.FilmModel
 
 
 /**
@@ -18,8 +19,8 @@ import ru.otus.filmmonster.lib.CheckableImageView
  */
 class FavoritesFragment : FilmsFragment() {
 
-    var favoriteFilms: MutableList<Film> = mutableListOf()
-     var films: MutableList<Film> = mutableListOf()
+    var favoriteFilms: MutableList<FilmModel> = mutableListOf()
+     var films: MutableList<FilmModel> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,21 +35,14 @@ class FavoritesFragment : FilmsFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        arguments?.let {
-            films = it.getParcelableArrayList<Film>(EXTRA_FILMS)?: arrayListOf()
-        }
-        for (film in films){
-            if (film.like){
-                favoriteFilms.add(film)
-            }
-        }
+
        /* selected = favoriteFilms.indexOf(favoriteFilms.find { film -> film.isHighlighted }?: -1)
         initRecycler(favoriteFilms)*/
     }
 
-    fun getFilmByID(id: Int): Film {
+    /*fun getFilmByID(id: Int): Film {
         return favoriteFilms.find { it.id == id }?: throw IllegalStateException("No film data provided")
-    }
+    }*/
 
     /*override fun onFilmDetailsClick(id: Int) {
         prevSelected = selected
@@ -57,7 +51,7 @@ class FavoritesFragment : FilmsFragment() {
         (activity as MainActivity).onFilmDetailsClick(getFilmByID(id))
     }*/
 
-    override fun onLikeClick(id: Int, likeView: CheckableImageView){
+    /*override fun onLikeClick(id: Int, likeView: CheckableImageView){
         val position = favoriteFilms.indexOf(getFilmByID(id))
         var film = getFilmByID(id)
         getFilmByID(id).like = !getFilmByID(id).like
@@ -81,7 +75,7 @@ class FavoritesFragment : FilmsFragment() {
 
         favoriteFilms.remove(getFilmByID(id))
         recyclerView.adapter?.notifyItemRemoved(position)
-    }
+    }*/
 
      /*fun selectFilm(selected: Int){
         unSelectFilms()
