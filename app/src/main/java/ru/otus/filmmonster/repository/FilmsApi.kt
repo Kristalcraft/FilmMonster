@@ -12,7 +12,7 @@ interface FilmsApi {
     fun getFilms(): Call<ArrayList<FilmModel>>*/
 
     @GET ("top")
-    fun getTop250Films(@Query("type") type: String,@Query("page") page: Int): Call<Top250filmsResponse>
+    suspend fun getTop250Films(@Query("type") type: String,@Query("page") page: Int): Top250filmsResponse
 
     @GET ("{filmID}")
     fun getFilm(@Path("filmID") filmID: Int): Call<FilmModel>

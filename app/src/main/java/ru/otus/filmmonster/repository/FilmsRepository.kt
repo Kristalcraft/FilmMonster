@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.coroutineScope
 import androidx.paging.*
 import kotlinx.coroutines.*
@@ -24,6 +25,7 @@ class FilmsRepository(
 ) {
 
     lateinit var filmsSource: FilmsPagingSource
+    val repoError = MutableLiveData<String>()
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
@@ -42,40 +44,30 @@ class FilmsRepository(
         ).liveData
     }
 
-    private fun getFilms(pageIndex: Int, pageSize: Int): ArrayList<FilmModel> {
+    private suspend fun getFilms(pageIndex: Int, pageSize: Int): ArrayList<FilmModel>
+            = withContext(ioDispatcher) {
         val list = arrayListOf<FilmModel>()
 
-       App.instance.api.getTop250Films("TOP_250_BEST_FILMS", pageIndex).enqueue(
-           object:Callback<Top250filmsResponse>{
-               override fun onResponse(
-                   call: Call<Top250filmsResponse>,
-                   response: Response<Top250filmsResponse>
-               ) {
-                   response.body().let {
-                       it?.films?.forEach { model ->
-                           list.add(
-                               FilmModel(
-                                   model.positionID,
-                                   model.id,
-                                   model.name,
-                                   model.poster
-                               )
-                           )
-                       }
+        try {
+            val response = App.instance.api.getTop250Films("TOP_250_BEST_FILMS", pageIndex)
 
-                       DBinstance.getDBinstance(App.instance.applicationContext)?.getFilmDao()
-                           ?.insert(list)
-                   }
-               }
+        response.films.forEachIndexed { i, model ->
+            list.add(
+                FilmModel(
+                    (pageIndex - 1)*20 + i,
+                    model.id,
+                    model.name,
+                    model.poster,
+                )
+            )
+        }
 
-               override fun onFailure(call: Call<Top250filmsResponse>, t: Throwable) {
-
-               }
-
-           }
-       )
-
-        val offset = (pageIndex - 1)*20
+        DBinstance.getDBinstance(App.instance.applicationContext)?.getFilmDao()
+            ?.insert(list)
+         } catch (e: Throwable){
+            repoError.postValue("Failed to get films from server")
+         }
+        val offset = (pageIndex - 1) * 20
         val DBlist = arrayListOf<FilmModel>()
             DBinstance.getDBinstance(App.instance.applicationContext)?.getFilmDao()
                 ?.getFilms(20, offset)?.forEach { model ->
@@ -91,7 +83,7 @@ class FilmsRepository(
                     Log.d("__OTUS__", "Подгружен из БД: ${model.name} ")
                 }
 
-        return DBlist
+        return@withContext DBlist
     }
 
     fun getFilm(filmID: Int, onFilmRecievedListener: (FilmModel?) -> Unit){

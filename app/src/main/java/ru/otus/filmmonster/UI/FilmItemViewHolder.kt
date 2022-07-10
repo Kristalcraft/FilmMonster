@@ -17,12 +17,12 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
     private val filmPoster: ImageView = itemView.findViewById(R.id.film_poster)
     private val detailsButton: Button = itemView.findViewById(R.id.button_details)
     private val likeButton: CheckableImageView = itemView.findViewById(R.id.like_button)
+    var filmID: Int = 0
 
     fun bind(film: FilmModel, onFilmDetailsClick: (position: Int) -> Unit, onLikeClick: (position: Int, likeView: CheckableImageView) -> Unit){
+        filmID = film.id
         filmTitle.text = film.name
-        /*filmPoster.setImageResource(film.poster)*/
         likeButton.isChecked = film.like?: false
-        /*checkHighlight(film)*/
         Log.d("_OTUS_","film  $adapterPosition  bound")
         detailsButton.setOnClickListener { _ ->
             onFilmDetailsClick(film.id)
@@ -39,13 +39,4 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
             .centerCrop()
             .into(filmPoster)
     }
-
-
-    /*fun checkHighlight(film: FilmModel){
-        if (!film.isHighlighted) {
-            filmTitle.setTextColor(Color.BLACK)
-        }else{
-            filmTitle.setTextColor(Color.RED)
-        }
-    }*/
 }

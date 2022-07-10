@@ -14,59 +14,56 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import ru.otus.filmmonster.*
+import ru.otus.filmmonster.databinding.FragmentFilmBinding
 import ru.otus.filmmonster.lib.CheckableImageView
 import ru.otus.filmmonster.repository.FilmModel
 import ru.otus.filmmonster.repository.FilmsRepository
 
 open class FilmsFragment : Fragment() {
 
-    /*private val viewModel: FilmsViewModel by activityViewModels()*/
     private lateinit var viewModel: FilmsViewModel
+    private lateinit var binding : FragmentFilmBinding
     lateinit var recyclerView: RecyclerView
-    /*private var films = viewModel.films.value*/
+    private lateinit var loadStateHolder: LoadAdapter.Holder
+    private lateinit var filmAdapter: FilmItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity(), FilmsViewModelFactory(FilmsRepository()))[FilmsViewModel::class.java]
-        /*arguments?.let {
-            films = it.getParcelableArrayList<Film>(EXTRA_FILMS)?: arrayListOf()
-        }*/
-
-        /*selected = films.indexOf(films.find { film -> film.isHighlighted })*/
-
-        /*parentFragmentManager.setFragmentResultListener(DETAILS_RESULT, this
-        ) { requestKey, result ->
-            val film = result.getParcelable<Film>(EXTRA_FILM)
-            film?.let{
-                films[it.id] = film
-                recyclerView.adapter?.notifyItemChanged(film.id)
-            }
-        }*/
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        /*recyclerView.adapter?.notifyDataSetChanged()*/
-        super.onViewStateRestored(savedInstanceState)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_film, container, false)
+        binding = FragmentFilmBinding.inflate( inflater,container, false )
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initRecycler()
-        /*Toast.makeText(context, "onViewCreated", Toast.LENGTH_SHORT).show()*/
+
+        viewModel.error.observe(viewLifecycleOwner, Observer<String> { error ->
+            Snackbar.make(
+                binding.root,
+                error,
+               5000
+            )
+                .setAction(R.string.try_again) {
+                    filmAdapter.refresh()
+                }
+                .setAnimationMode(Snackbar.ANIMATION_MODE_FADE)
+                .show()
+        } )
     }
 
     open fun initRecycler(){
-        /*Toast.makeText(context, "initRecycler", Toast.LENGTH_SHORT).show()*/
-        recyclerView = view?.findViewById<RecyclerView>(R.id.recycler) as RecyclerView
+
+        recyclerView = binding.recycler
         val horizontalItemDecoration = DividerItemDecoration(requireContext(), RecyclerView.VERTICAL)
         ContextCompat.getDrawable(requireContext(), R.drawable.divider_drawable)
             ?.let { horizontalItemDecoration.setDrawable(it) }
@@ -80,23 +77,34 @@ open class FilmsFragment : Fragment() {
             recyclerView.addItemDecoration(verticalItemDecoration)
         }
 
-        recyclerView.adapter =
-            FilmItemAdapter(
-                arrayListOf(),
-                {id -> onFilmDetailsClick(id)},
-                {id, likeView -> onLikeClick(id, likeView)}
-            )
+         filmAdapter = FilmItemAdapter(
+            {id -> onFilmDetailsClick(id)},
+            {id, likeView -> onLikeClick(id, likeView)},
+             viewModel.highlightedFilmID
+        )
 
         viewModel.pagedFilms.observe(viewLifecycleOwner, Observer<PagingData<FilmModel>>{
-            lifecycleScope.launch { (recyclerView.adapter as FilmItemAdapter).submitData(it) }
+            lifecycleScope.launch { filmAdapter.submitData(it) }
         })
+
+        val tryAgainAction: TryAgainAction = { filmAdapter.refresh()}
+        val loadAdapter = LoadAdapter(tryAgainAction)
+        val adapterWithLoadState = filmAdapter.withLoadStateFooter(loadAdapter)
+        recyclerView.adapter = adapterWithLoadState
+
+        loadStateHolder = LoadAdapter.Holder(
+            binding.loadStateView,
+            binding.swipeRefreshLayout,
+            tryAgainAction
+        )
+
+        observeLoadState(filmAdapter)
     }
 
 
 
     open fun onFilmDetailsClick(id: Int) {
         viewModel.onFilmClick(id)
-        /*selectFilm(id)*/
         (activity as MainActivity).onFilmDetailsClick(id)
     }
 
@@ -116,12 +124,16 @@ open class FilmsFragment : Fragment() {
                 .setAnimationMode(Snackbar.ANIMATION_MODE_FADE)
                 .show()
         }
-
     }
 
-/*    open fun getFilmByID(id: Int): Film {
-        return films.find { it.id == id }?: throw IllegalStateException("No film data provided")
-    }*/
+    private fun observeLoadState(adapter: FilmItemAdapter) {
+        // you can also use adapter.addLoadStateListener
+        lifecycleScope.launch {
+            adapter.loadStateFlow.debounce(200).collectLatest { state ->
+                loadStateHolder.bind(state.refresh)
+            }
+        }
+    }
 
 /*    open fun selectFilm(selected: Int){
         recyclerView.adapter?.notifyItemChanged(selected)

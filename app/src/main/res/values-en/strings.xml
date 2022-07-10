@@ -20,4 +20,6 @@
     <string name="likeSnackbar">Film added to favorites</string>
     <string name="dislikeSnackbar">Film deleted from favorites</string>
     <string name="cancel">Cancel</string>
+    <string name="try_again">Try again</string>
+    <string name="load_error">Failed to get films from server</string>
 </resources>

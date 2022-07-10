@@ -18,10 +18,10 @@ import com.google.gson.reflect.TypeToken
 
 data class FilmModel (
     @Expose
-    @PrimaryKey(autoGenerate = true)
     val positionID: Int?,
     @SerializedName(value="id", alternate = ["kinopoiskId", "filmId"])
     @Expose
+    @PrimaryKey
     val id: Int,
     @SerializedName("nameRu")
     @Expose

@@ -56,18 +56,6 @@ open class MainActivity : AppCompatActivity() {
         return true
     }
 
-    /*fun checkSavedState(savedInstanceState: android.os.Bundle?){
-        if (savedInstanceState == null) {
-            viewModel.films.observe(this, Observer<ArrayList<Film>>{ repos -> this.films = repos; openFilms(savedInstanceState)})
-            selected = -1
-            prevSelected = -1
-        } else {
-            selected = savedInstanceState.getInt("select")
-            prevSelected = savedInstanceState.getInt("prevSelect")
-            viewModel.films.observe(this, Observer<ArrayList<Film>>{ repos -> this.films = repos; openFilms(savedInstanceState)})
-        }
-    }*/
-
     private fun openPreferences() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, FavoritesFragment())

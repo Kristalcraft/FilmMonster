@@ -1,5 +1,6 @@
 package ru.otus.filmmonster
 
+import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,24 +13,24 @@ class FilmsViewModel(
 ) : ViewModel() {
 
     /*private*/ var mFilms = MutableLiveData<ArrayList<FilmModel>>()
-    private val mError = MutableLiveData<String>()
+    private val mError = filmsRepository.repoError
     private val mSelectedFilm =  MutableLiveData<FilmModel>()
+    var highlightedFilmID = MutableLiveData<Int>()
+
 
     val pagedFilms: LiveData<PagingData<FilmModel>>
 
     init {
-
+        highlightedFilmID.value = -1
         pagedFilms = filmsRepository.getPagedFilms()
+
     }
     val selectedFilm: LiveData<FilmModel> = mSelectedFilm
     val error: LiveData<String> = mError
-    var selected = -1
-    var prevSelected: Int = -1
 
     fun onFilmClick(id: Int){
-        prevSelected = selected
+        highlightedFilmID.value = id
         filmsRepository.getFilm(id) {it: FilmModel? -> mSelectedFilm.value = it }
-        /*getFilmByID(id).isHighlighted = true*/
     }
 
     /*fun getFilmByID(id: Int): Film {
