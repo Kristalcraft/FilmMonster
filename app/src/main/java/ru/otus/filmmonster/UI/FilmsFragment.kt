@@ -25,7 +25,7 @@ import ru.otus.filmmonster.repository.FilmsRepository
 
 open class FilmsFragment : Fragment() {
 
-    private lateinit var viewModel: FilmsViewModel
+    lateinit var viewModel: FilmsViewModel
     private lateinit var binding : FragmentFilmBinding
     lateinit var recyclerView: RecyclerView
     private lateinit var loadStateHolder: LoadAdapter.Holder
@@ -83,9 +83,7 @@ open class FilmsFragment : Fragment() {
              viewModel.highlightedFilmID
         )
 
-        viewModel.pagedFilms.observe(viewLifecycleOwner, Observer<PagingData<FilmModel>>{
-            lifecycleScope.launch { filmAdapter.submitData(it) }
-        })
+        observePagedFilms(filmAdapter)
 
         val tryAgainAction: TryAgainAction = { filmAdapter.refresh()}
         val loadAdapter = LoadAdapter(tryAgainAction)
@@ -101,7 +99,11 @@ open class FilmsFragment : Fragment() {
         observeLoadState(filmAdapter)
     }
 
-
+    open fun observePagedFilms(filmAdapter: FilmItemAdapter) {
+        viewModel.pagedFilms.observe(viewLifecycleOwner, Observer<PagingData<FilmModel>> {
+            lifecycleScope.launch { filmAdapter.submitData(it) }
+        })
+    }
 
     open fun onFilmDetailsClick(id: Int) {
         viewModel.onFilmClick(id)
@@ -135,32 +137,10 @@ open class FilmsFragment : Fragment() {
         }
     }
 
-/*    open fun selectFilm(selected: Int){
-        recyclerView.adapter?.notifyItemChanged(selected)
-        recyclerView.adapter?.notifyItemChanged(prevSelected)
-        //Log.d("_OTUS_", "selected: $selected, prevselected: $prevSelected")
-    }*/
-
-/*    open fun unSelectFilms(){
-        for (film in films) {
-            film.isHighlighted = false
-        }
-    }*/
-
     companion object {
-        const val EXTRA_FILM = "film"
-        const val EXTRA_FILMS = "films"
-        const val DETAILS_RESULT = "detailsResult"
-
         @JvmStatic
         fun newInstance() =
-            FilmsFragment()/*.apply {
-                arguments = Bundle().apply {
-                    putParcelableArrayList(EXTRA_FILMS, ArrayList<Parcelable>(films))
-                }
-            }*/
-
-
+            FilmsFragment()
     }
 }
 

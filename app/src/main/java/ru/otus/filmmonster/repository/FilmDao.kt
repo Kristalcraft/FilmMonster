@@ -9,6 +9,9 @@ interface FilmDao {
     @Query("SELECT * FROM FilmModel ORDER by positionID LIMIT :limit OFFSET :offset")
     fun getFilms(limit: Int, offset: Int): List<FilmModel>?
 
+    @Query("SELECT * FROM FilmModel WHERE `like` = 1 ORDER by positionID LIMIT :limit OFFSET :offset")
+    fun getFavoriteFilms(limit: Int, offset: Int): List<FilmModel>?
+
     @Query("SELECT * FROM FilmModel ORDER by positionID  LIMIT :limit OFFSET :offset")
     fun getFilmsLiveData(limit: Int, offset: Int): LiveData<List<FilmModel>?>
 

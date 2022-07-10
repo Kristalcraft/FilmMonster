@@ -5,7 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.PagingData
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 
 import ru.otus.filmmonster.R
 import ru.otus.filmmonster.lib.CheckableImageView
@@ -19,27 +23,11 @@ import ru.otus.filmmonster.repository.FilmModel
  */
 class FavoritesFragment : FilmsFragment() {
 
-    var favoriteFilms: MutableList<FilmModel> = mutableListOf()
-     var films: MutableList<FilmModel> = mutableListOf()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun observePagedFilms(filmAdapter: FilmItemAdapter) {
+        viewModel.pagedFavoriteFilms.observe(viewLifecycleOwner, Observer<PagingData<FilmModel>> {
+            lifecycleScope.launch { filmAdapter.submitData(it) }
+        })
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorites, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-       /* selected = favoriteFilms.indexOf(favoriteFilms.find { film -> film.isHighlighted }?: -1)
-        initRecycler(favoriteFilms)*/
-    }
-
     /*fun getFilmByID(id: Int): Film {
         return favoriteFilms.find { it.id == id }?: throw IllegalStateException("No film data provided")
     }*/

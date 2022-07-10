@@ -39,7 +39,7 @@ class FilmsRepository(
         response.films.forEachIndexed { i, model ->
             list.add(
                 FilmModel(
-                    (pageIndex - 1)*20 + i,
+                    (pageIndex - 1)*pageSize + i,
                     model.id,
                     model.name,
                     model.poster,
@@ -52,10 +52,10 @@ class FilmsRepository(
          } catch (e: Throwable){
             repoError.postValue("Failed to get films from server")
          }
-        val offset = (pageIndex - 1) * 20
+        val offset = (pageIndex - 1) * pageSize
         val DBlist = arrayListOf<FilmModel>()
             DBinstance.getDBinstance(App.instance.applicationContext)?.getFilmDao()
-                ?.getFilms(20, offset)?.forEach { model ->
+                ?.getFilms(pageSize, offset)?.forEach { model ->
                     DBlist.add(FilmModel(
                         model.positionID,
                         model.id,
@@ -67,6 +67,27 @@ class FilmsRepository(
                     ))
                     Log.d("__OTUS__", "Подгружен из БД: ${model.name} ")
                 }
+
+        return@withContext DBlist
+    }
+
+    suspend fun getFavoriteFilms(pageIndex: Int, pageSize: Int): ArrayList<FilmModel>
+            = withContext(ioDispatcher){
+        val offset = (pageIndex - 1) * pageSize
+        val DBlist = arrayListOf<FilmModel>()
+        DBinstance.getDBinstance(App.instance.applicationContext)?.getFilmDao()
+            ?.getFavoriteFilms(pageSize, offset)?.forEach { model ->
+                DBlist.add(FilmModel(
+                    model.positionID,
+                    model.id,
+                    model.name,
+                    model.poster,
+                    model.description?:"",
+                    model.like?: false,
+                    model.comment?:""
+                ))
+                Log.d("__OTUS__", "Подгружен из БД: ${model.name} ")
+            }
 
         return@withContext DBlist
     }

@@ -15,11 +15,11 @@ class FilmsPagingSource (
         val pageIndex = params.key ?: 1
 
         return try {
-            val films = loader.invoke(pageIndex, params.loadSize)
+            val films = loader.invoke(pageIndex, pageSize)
             return LoadResult.Page(
                 data = films,
                 prevKey = if (pageIndex == 1) null else pageIndex - 1,
-                if (films.size < 20) null
+                if (films.size < pageSize) null
                 else pageIndex + 1
             )
         } catch (e: Exception){

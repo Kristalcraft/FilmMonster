@@ -15,7 +15,6 @@ class FilmsViewModel(
     private val filmsRepository: FilmsRepository
 ) : ViewModel() {
 
-    /*private*/ var mFilms = MutableLiveData<ArrayList<FilmModel>>()
     private val mError = filmsRepository.repoError
     private val mSelectedFilm = MutableLiveData<FilmModel>()
     var highlightedFilmID = MutableLiveData<Int>()
@@ -40,6 +39,25 @@ class FilmsViewModel(
                  .cachedIn(viewModelScope)
         }
 
+    val pagedFavoriteFilms: LiveData<PagingData<FilmModel>>
+        get() {
+            val loader: FilmsPageLoader = { pageIndex, pageSize ->
+                filmsRepository.getFavoriteFilms(pageIndex, pageSize)
+            }
+            return Pager(
+                config = PagingConfig(
+                    pageSize = FilmsRepository.PAGE_SIZE,
+                    enablePlaceholders = false,
+                    /*initialLoadSize = 2*/
+                ),
+                pagingSourceFactory = {
+                    filmsRepository.filmsSource = FilmsPagingSource(loader, 20)
+                    filmsRepository.filmsSource
+                }
+            ).liveData
+                .cachedIn(viewModelScope)
+        }
+
     init {
         highlightedFilmID.value = -1
 
@@ -59,6 +77,7 @@ class FilmsViewModel(
         if (changingFilm?.like != null) {
             changingFilm.like = !changingFilm.like!!
             filmsRepository.updateFilmInDB(changingFilm)
+            filmsRepository.filmsSource.invalidate()
         }
     }
 

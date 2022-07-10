@@ -28,7 +28,7 @@ class App : Application() {
                     chain.request()
                         .newBuilder()
                         .addHeader("accept", "application/json")
-                        .addHeader("X-API-KEY", "ff2413b6-d148-47df-9ea1-2577240a3e8e")
+                        .addHeader("X-API-KEY", "e6def55d-d34f-45c7-94cb-516d02c0143d")
                         .build()
                 )
                 return@addInterceptor response
