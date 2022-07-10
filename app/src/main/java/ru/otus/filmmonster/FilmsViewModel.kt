@@ -54,22 +54,15 @@ class FilmsViewModel(
         filmsRepository.getFilm(id) {it: FilmModel? -> mSelectedFilm.value = it }
     }
 
-    /*fun getFilmByID(id: Int): Film {
-        return mFilms.value?.find { it.id == id }?: throw IllegalStateException("Film not found")
-    }*/
-
-    /*fun onLikeChanged(id: Int){
-        var changingFilm = getFilmByID(id)
-        val position = mFilms.value?.indexOf(getFilmByID(id))
-        changingFilm = changingFilm.copy(like = !changingFilm.like)
-        position?.let {
-            mFilms.value?.set(it, changingFilm)
+    fun onLikeChanged(id: Int){
+        val changingFilm = filmsRepository.getFilmFromDB(id)
+        if (changingFilm?.like != null) {
+            changingFilm.like = !changingFilm.like!!
+            filmsRepository.updateFilmInDB(changingFilm)
         }
-        mFilms.value = mFilms.value
-    }*/
+    }
 
     fun onFilmChanged(comment: String, like: Boolean){
-        /*val id = selectedFilm.value?.id*/
         val changingFilm = selectedFilm.value?.copy()
         changingFilm?.comment = comment
         changingFilm?.like = like
@@ -77,17 +70,6 @@ class FilmsViewModel(
             filmsRepository.updateFilmInDB(changingFilm)
         }
         filmsRepository.filmsSource.invalidate()
-
-        /*var position: Int? = null
-        position = mFilms.value?.indexOf(selectedFilm.value)
-
-        position?.let {
-            if (changingFilm != null) {
-                mFilms.value?.set(it, changingFilm)
-                selected = position
-            }
-        }
-        mFilms.value = mFilms.value*/
     }
 
 

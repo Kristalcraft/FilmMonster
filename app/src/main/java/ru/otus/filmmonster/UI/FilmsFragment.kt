@@ -109,7 +109,7 @@ open class FilmsFragment : Fragment() {
     }
 
     open fun onLikeClick(id: Int, likeView: CheckableImageView){
-        /*viewModel.onLikeChanged(id)*/
+        viewModel.onLikeChanged(id)
         likeView.toggle()
         view?.let {
             Snackbar.make(
@@ -118,7 +118,7 @@ open class FilmsFragment : Fragment() {
                 else R.string.dislikeSnackbar, Snackbar.LENGTH_SHORT
             )
                 .setAction(R.string.cancel) {
-                    /*viewModel.onLikeChanged(id)*/
+                    viewModel.onLikeChanged(id)
                     likeView.toggle()
                 }
                 .setAnimationMode(Snackbar.ANIMATION_MODE_FADE)
