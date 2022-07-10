@@ -20,34 +20,35 @@ open class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this, FilmsViewModelFactory(FilmsRepository()))[FilmsViewModel::class.java]
-        /*checkSavedState(savedInstanceState)*/
-        openFilms(savedInstanceState)
-
-        /*openFilms(savedInstanceState)*/
 
         val navigation: BottomNavigationView= findViewById(R.id.bottomNavigation)
-
         navigation.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.films -> openFilms(savedInstanceState)
-                R.id.favorites -> openPreferences()
+                R.id.favorites -> openFavorites(savedInstanceState)
             }
             true
+        }
+        when (viewModel.fragmentName) {
+            FILMS -> openFilms(savedInstanceState)
+            FAVORITE_FILMS -> openFavorites(savedInstanceState)
+            DETAILS -> viewModel.selectedFilm.value?.id?.let { onFilmDetailsClick(it) }
         }
     }
 
     fun openFilms(savedInstanceState: android.os.Bundle?){
+        viewModel.fragmentName = FILMS
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, FilmsFragment.newInstance())
+                .replace(R.id.fragment_container, FilmsFragment(), FILMS)
                 .commit()
         }
         else {
-            supportFragmentManager.findFragmentById(R.id.fragment_container)?.let {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, it)
-                    .commit()
-            }
+            val filmsFragment = supportFragmentManager.findFragmentByTag(FILMS)?:  FilmsFragment()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, filmsFragment)
+                .commit()
+
         }
     }
 
@@ -56,13 +57,23 @@ open class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private fun openPreferences() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, FavoritesFragment())
-            .commit()
+    private fun openFavorites(savedInstanceState: android.os.Bundle?) {
+        viewModel.fragmentName = FAVORITE_FILMS
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, FavoritesFragment(), FAVORITE_FILMS)
+                .commit()
+        }
+        else {
+            val favoritesFragment = supportFragmentManager.findFragmentByTag(FAVORITE_FILMS)?: FavoritesFragment()
+            supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, favoritesFragment)
+                    .commit()
+        }
     }
 
     fun onFilmDetailsClick(id: Int) {
+        viewModel.fragmentName = DETAILS
         supportFragmentManager.beginTransaction()
             .add(R.id.fragment_container, DetailsFragment(), DETAILS)
             .addToBackStack(DETAILS)
@@ -87,22 +98,13 @@ open class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    override fun onSaveInstanceState(outState: AndroidOsBundle){
-        super.onSaveInstanceState(outState)
-        outState.putInt("select", selected)
-        outState.putInt("prevSelect", prevSelected)
-    }
-
-
-
-
     var selected: Int = -1
     var prevSelected: Int = -1
 
 
     companion object {
-        const val EXTRA_FILM = "film"
-        const val EXTRA_FILMS = "films"
+        const val FAVORITE_FILMS = "favorite_films"
+        const val FILMS = "fragment_films"
         const val DETAILS = "fragment_details"
     }
 }

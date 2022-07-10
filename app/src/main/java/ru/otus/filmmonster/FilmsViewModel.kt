@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
+import ru.otus.filmmonster.MainActivity.Companion.FILMS
 import ru.otus.filmmonster.repository.FilmModel
 import ru.otus.filmmonster.repository.FilmsPageLoader
 import ru.otus.filmmonster.repository.FilmsPagingSource
@@ -14,7 +15,7 @@ import ru.otus.filmmonster.repository.FilmsRepository
 class FilmsViewModel(
     private val filmsRepository: FilmsRepository
 ) : ViewModel() {
-
+    var fragmentName: String = FILMS
     private val mError = filmsRepository.repoError
     private val mSelectedFilm = MutableLiveData<FilmModel>()
     var highlightedFilmID = MutableLiveData<Int>()
@@ -90,6 +91,4 @@ class FilmsViewModel(
         }
         filmsRepository.filmsSource.invalidate()
     }
-
-
 }

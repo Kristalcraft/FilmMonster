@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import ru.otus.filmmonster.*
+import ru.otus.filmmonster.MainActivity.Companion.FILMS
 import ru.otus.filmmonster.databinding.FragmentFilmBinding
 import ru.otus.filmmonster.lib.CheckableImageView
 import ru.otus.filmmonster.repository.FilmModel
@@ -59,6 +60,11 @@ open class FilmsFragment : Fragment() {
                 .setAnimationMode(Snackbar.ANIMATION_MODE_FADE)
                 .show()
         } )
+    }
+
+    override fun onResume() {
+        viewModel.fragmentName = FILMS
+        super.onResume()
     }
 
     open fun initRecycler(){
@@ -135,12 +141,6 @@ open class FilmsFragment : Fragment() {
                 loadStateHolder.bind(state.refresh)
             }
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            FilmsFragment()
     }
 }
 
