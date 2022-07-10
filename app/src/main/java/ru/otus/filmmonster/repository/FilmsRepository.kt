@@ -29,22 +29,7 @@ class FilmsRepository(
 
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    fun getPagedFilms(): LiveData<PagingData<FilmModel>>{
-        val loader: FilmsPageLoader = { pageIndex, pageSize ->
-            getFilms(pageIndex, pageSize)
-        }
-        return Pager(
-            config = PagingConfig(
-                pageSize = PAGE_SIZE,
-                enablePlaceholders = false,
-                /*initialLoadSize = 2*/
-            ),
-            pagingSourceFactory = {filmsSource = FilmsPagingSource(loader, PAGE_SIZE)
-            filmsSource}
-        ).liveData
-    }
-
-    private suspend fun getFilms(pageIndex: Int, pageSize: Int): ArrayList<FilmModel>
+    suspend fun getFilms(pageIndex: Int, pageSize: Int): ArrayList<FilmModel>
             = withContext(ioDispatcher) {
         val list = arrayListOf<FilmModel>()
 
