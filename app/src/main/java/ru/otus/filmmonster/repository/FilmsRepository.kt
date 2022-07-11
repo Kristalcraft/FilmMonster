@@ -1,25 +1,12 @@
 package ru.otus.filmmonster.repository
 
-import android.app.Activity
-import android.content.SyncContext
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.coroutineScope
-import androidx.paging.*
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ru.otus.filmmonster.App
-/*import ru.otus.filmmonster.Film*/
-import ru.otus.filmmonster.FilmsViewModel
-import ru.otus.filmmonster.MainActivity
-import ru.otus.filmmonster.UI.FilmsFragment
-import java.util.concurrent.Executors
-import kotlin.coroutines.coroutineContext
 
 class FilmsRepository(
 ) {
@@ -31,43 +18,59 @@ class FilmsRepository(
 
     suspend fun getFilms(pageIndex: Int, pageSize: Int): ArrayList<FilmModel>
             = withContext(ioDispatcher) {
+        /*Log.d("__OTUS__", "getFilms $pageIndex")*/
+        val films = getFilmsFromDB(pageIndex, pageSize)
+        /*Log.d("__OTUS__", "${films.size}")*/
+        if (films.size < 20) {
+            getFilmsFromAPI(pageIndex, pageSize)
+            return@withContext getFilmsFromDB(pageIndex, pageSize)
+        }
+        else {Log.d("__OTUS__", "${films.size} return films")
+            return@withContext films}
+    }
+
+    private suspend fun getFilmsFromAPI(pageIndex: Int, pageSize: Int)
+            = withContext(ioDispatcher) {
         val list = arrayListOf<FilmModel>()
 
         try {
             val response = App.instance.api.getTop250Films("TOP_250_BEST_FILMS", pageIndex)
-
-        response.films.forEachIndexed { i, model ->
-            list.add(
-                FilmModel(
-                    (pageIndex - 1)*pageSize + i,
-                    model.id,
-                    model.name,
-                    model.poster,
-                )
-            )
-        }
-
-        DBinstance.getDBinstance(App.instance.applicationContext)?.getFilmDao()
-            ?.insert(list)
-         } catch (e: Throwable){
-            repoError.postValue("Failed to get films from server")
-         }
-        val offset = (pageIndex - 1) * pageSize
-        val DBlist = arrayListOf<FilmModel>()
-            DBinstance.getDBinstance(App.instance.applicationContext)?.getFilmDao()
-                ?.getFilms(pageSize, offset)?.forEach { model ->
-                    DBlist.add(FilmModel(
-                        model.positionID,
+            /*Log.d("__OTUS__", "response from server $pageIndex")*/
+            response.films.forEachIndexed { i, model ->
+                list.add(
+                    FilmModel(
+                        (pageIndex - 1)*pageSize + i,
                         model.id,
                         model.name,
                         model.poster,
-                        model.description?:"",
-                        model.like?: false,
-                        model.comment?:""
-                    ))
-                    Log.d("__OTUS__", "Подгружен из БД: ${model.name} ")
-                }
+                    )
+                )
+            }
 
+            DBinstance.getDBinstance(App.instance.applicationContext)?.getFilmDao()
+                ?.insert(list)
+        } catch (e: Throwable){
+            repoError.postValue("Failed to get films from server: ${e.message}")
+        }
+    }
+
+    private suspend fun getFilmsFromDB(pageIndex: Int, pageSize: Int): ArrayList<FilmModel>
+            = withContext(ioDispatcher){
+        val offset = (pageIndex - 1) * pageSize
+        val DBlist = arrayListOf<FilmModel>()
+        DBinstance.getDBinstance(App.instance.applicationContext)?.getFilmDao()
+            ?.getFilms(pageSize, offset)?.forEach { model ->
+                DBlist.add(FilmModel(
+                    model.positionID,
+                    model.id,
+                    model.name,
+                    model.poster,
+                    model.description?:"",
+                    model.like?: false,
+                    model.comment?:""
+                ))
+                /*Log.d("__OTUS__", "Подгружен из БД: ${model.name} ")*/
+            }
         return@withContext DBlist
     }
 
@@ -107,6 +110,7 @@ class FilmsRepository(
                     )
                 }
                 override fun onFailure(call: Call<FilmModel>, t: Throwable) {
+                    repoError.postValue("Failed to get film from server: ${t.message}")
                 }
             }
         )
@@ -120,39 +124,18 @@ class FilmsRepository(
     }
 
     fun updateFilmInDB(filmModel: FilmModel){
-
-                DBinstance.getDBinstance(App.instance.applicationContext)?.getFilmDao()
-                    ?.update(filmModel)
-
+        DBinstance.getDBinstance(App.instance.applicationContext)?.getFilmDao()
+            ?.update(filmModel)
     }
 
     fun getFilmFromDB(filmID: Int): FilmModel?{
         val filmModel = DBinstance.getDBinstance(App.instance.applicationContext)?.getFilmDao()
                     ?.getFilm(filmID.toString())
-
         return filmModel
-
     }
 
-    /*fun filmModelToFilm(filmModel: FilmModel?): Film?{
-        var film:Film? = null
-        filmModel.let{
-            film = Film(filmModel!!.id, filmModel.name,filmModel.poster,filmModel.description?:"",filmModel.like?: false,filmModel.comment?:"")
-        }
-        return film
-    }*/
-
-    /*fun filmToFilmModel(film: Film?): FilmModel?{
-        var filmModel:FilmModel? = null
-        film.let{
-            filmModel = FilmModel(film!!.id, film.name,film.poster,film.description?:"",film.like?: false,film.comment?:"")
-        }
-        return filmModel
-    }*/
-
-
     companion object {
-        const val PAGE_SIZE = 1
+        const val PAGE_SIZE = 20
     }
 }
 

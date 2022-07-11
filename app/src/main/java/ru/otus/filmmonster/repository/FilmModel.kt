@@ -3,11 +3,8 @@ package ru.otus.filmmonster.repository
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.google.gson.reflect.TypeToken
-
 
 @Entity(
     indices = [
@@ -26,7 +23,7 @@ data class FilmModel (
     @SerializedName("nameRu")
     @Expose
     val name: String,
-    @SerializedName("posterUrl")
+    @SerializedName("posterUrlPreview")
     @Expose
     val poster: String,
     @Expose

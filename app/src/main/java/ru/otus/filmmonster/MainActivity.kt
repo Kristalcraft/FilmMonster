@@ -13,7 +13,6 @@ import ru.otus.filmmonster.repository.FilmsRepository
 
 open class MainActivity : AppCompatActivity() {
 
-    /*private val viewModel: FilmsViewModel by viewModels()*/
     private lateinit var viewModel: FilmsViewModel
 
     override fun onCreate(savedInstanceState: AndroidOsBundle?) {
@@ -97,10 +96,6 @@ open class MainActivity : AppCompatActivity() {
             .create()
             .show()
     }
-
-    var selected: Int = -1
-    var prevSelected: Int = -1
-
 
     companion object {
         const val FAVORITE_FILMS = "favorite_films"

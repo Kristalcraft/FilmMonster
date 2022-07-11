@@ -20,7 +20,6 @@ class LoadAdapter(
      * in the list's header and footer.
      */
 
-
     override fun onBindViewHolder(holder: Holder, loadState: LoadState) {
         holder.bind(loadState)
     }
@@ -30,12 +29,9 @@ class LoadAdapter(
         val binding = PartDefaultLoadStateBinding.inflate(inflater, parent, false)
         return Holder(binding, null, tryAgainAction)
     }
-
-
     /**
      * Action to be executed when Try Again button is pressed
      */
-
 
     /**
      * The same layout is used for:

@@ -1,7 +1,5 @@
 package ru.otus.filmmonster.UI
 
-import android.graphics.Color
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -23,7 +21,7 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
         filmID = film.id
         filmTitle.text = film.name
         likeButton.isChecked = film.like?: false
-        Log.d("_OTUS_","film  $adapterPosition  bound")
+        /*Log.d("__OTUS__","film  ${film.positionID}  bound")*/
         detailsButton.setOnClickListener { _ ->
             onFilmDetailsClick(film.id)
         }
@@ -34,6 +32,7 @@ class FilmItemViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
 
         Glide.with(filmPoster.context)
             .load(film.poster)
+            .timeout(10000)
             .placeholder(R.drawable.ic_baseline_image_filler)
             .error(com.google.android.material.R.drawable.mtrl_ic_error)
             .centerCrop()

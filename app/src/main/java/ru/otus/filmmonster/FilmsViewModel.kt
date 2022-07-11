@@ -1,6 +1,5 @@
 package ru.otus.filmmonster
 
-import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,7 +29,7 @@ class FilmsViewModel(
                 config = PagingConfig(
                     pageSize = FilmsRepository.PAGE_SIZE,
                     enablePlaceholders = false,
-                    /*initialLoadSize = 2*/
+                    initialLoadSize = 3 * FilmsRepository.PAGE_SIZE
                 ),
                 pagingSourceFactory = {
                     filmsRepository.filmsSource = FilmsPagingSource(loader, 20)
@@ -49,7 +48,7 @@ class FilmsViewModel(
                 config = PagingConfig(
                     pageSize = FilmsRepository.PAGE_SIZE,
                     enablePlaceholders = false,
-                    /*initialLoadSize = 2*/
+                    initialLoadSize = 3 * FilmsRepository.PAGE_SIZE
                 ),
                 pagingSourceFactory = {
                     filmsRepository.filmsSource = FilmsPagingSource(loader, 20)
